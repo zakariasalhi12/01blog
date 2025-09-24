@@ -1,15 +1,30 @@
 package com._blog._blog.controllers.auth;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com._blog._blog.dto.UserRequest;
+import com._blog._blog.model.User;
+import com._blog._blog.repository.UserRepository;
 
-@RestController @RequestMapping("/api/auth")
+@RestController
+@RequestMapping("/api/auth")
 public class Signup {
 
-    @GetMapping("signup")
-    public String Exec() {
-        return "";
+    @Autowired
+    private UserRepository userRepository;
+
+    @PostMapping("/signup")
+    public User signup(@RequestBody UserRequest userRequest) {
+        User user = new User(
+                userRequest.getUsername(),
+                userRequest.getEmail(),
+                userRequest.getPassword(),
+                userRequest.getAge()
+        );
+        return userRepository.save(user);
     }
 }
