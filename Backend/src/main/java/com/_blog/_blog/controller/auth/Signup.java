@@ -1,6 +1,7 @@
-package com._blog._blog.controllers.auth;
+package com._blog._blog.controller.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +18,15 @@ public class Signup {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping("/signup")
     public User signup(@RequestBody UserRequest userRequest) {
         User user = new User(
                 userRequest.getUsername(),
                 userRequest.getEmail(),
-                userRequest.getPassword(),
+                passwordEncoder.encode(userRequest.getPassword()),
                 userRequest.getAge()
         );
         return userRepository.save(user);
