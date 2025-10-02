@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com._blog._blog.dto.UserRequest;
-import com._blog._blog.model.User;
+import com._blog._blog.models.User;
 import com._blog._blog.repository.UserRepository;
 
 import jakarta.validation.Valid;

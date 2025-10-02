@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com._blog._blog.model.User;
+import com._blog._blog.models.User;
 
 public class CustomUserDetails implements UserDetails {
 

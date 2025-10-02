@@ -1,0 +1,15 @@
+Current Task : Create the Database model and relations
+Next Task : Post Creating feature 
+
+Todo : Users 
+    Note : Subscribed users receive notifications when new posts are published
+        Todo : subscribe between users
+
+Todo : Post Creating :
+    Note : Each post includes a timestamp, description, and media preview
+        Todo - add image and video integration and text to the post 
+        Todo - Likes and Dislike
+        Todo - delete and update
+        Todo - Add comments Section
+            Todo - delete and update feature
+            Todo - Likes and Dislike

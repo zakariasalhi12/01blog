@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com._blog._blog.model.User;
+import com._blog._blog.models.User;
 import com._blog._blog.repository.UserRepository;
 import com._blog._blog.security.CustomUserDetails;
 

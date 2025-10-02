@@ -1,4 +1,8 @@
-package com._blog._blog.model;
+package com._blog._blog.models;
+
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,7 +43,10 @@ public class User {
     @Column(nullable = false)
     private int age;
 
-    private String avatar;    
+    private String avatar;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     // Constructors
     public User() {}
@@ -70,5 +77,11 @@ public class User {
     public void setAvatar(String avatar) { this.avatar = avatar; }
 
     public int getAge() { return age; }
-    public void setAge(int age) { this.age = age; }     
+    public void setAge(int age) { this.age = age; }
+    
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
 }

@@ -2,7 +2,7 @@ package com._blog._blog.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com._blog._blog.model.User;
+import com._blog._blog.models.User;
 import com._blog._blog.repository.UserRepository;
 
 @Service
