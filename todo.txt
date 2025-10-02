@@ -1,4 +1,11 @@
 Current Task : Create the Database model and relations
+
+Current Task :
+    implementation of this routes:
+        todo : /api/user/{id}
+        todo : /api/user/{id}/subscribes
+        todo : /api/user/{id}/posts {posts , comments , likes } 15 for every page
+
 Next Task : Post Creating feature 
 
 Todo : Users 
