@@ -25,16 +25,14 @@ public class comments {
     }
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
     @Enumerated(EnumType.STRING)
     private TargetType targetType;
 
     @OneToMany
-
-    // foreign keys
-    private Long userId;
+    private User userId;
 
     @Enumerated(EnumType.STRING)
     private Long targetId;
@@ -47,7 +45,7 @@ public class comments {
 
     public comments() {}
 
-    public comments(TargetType targetType, Long userId, Long targetId, String content) {
+    public comments(TargetType targetType, User userId, Long targetId, String content) {
         this.targetType = targetType;
         this.userId = userId;
         this.targetId = targetId;
@@ -66,11 +64,11 @@ public class comments {
         this.targetType = targetType;
     }
 
-    public Long getUserId() {
+    public User getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(User userId) {
         this.userId = userId;
     }
 

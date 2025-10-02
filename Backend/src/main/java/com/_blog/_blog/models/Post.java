@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     // Assuming there's a User entity you're referencing

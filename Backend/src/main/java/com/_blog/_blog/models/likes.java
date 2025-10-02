@@ -6,6 +6,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,13 +24,16 @@ public class likes {
     }
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
     // foreign keys
 
-    private Long userId;
-    private Long targetId;
+    @ManyToOne
+    private User userId;
+
+    @ManyToOne
+    private User targetId;
 
     @Enumerated(EnumType.STRING)
     private TargetType targetType;
@@ -40,7 +44,7 @@ public class likes {
 
     public likes() {}
 
-    public likes(Long userId, Long targetId, TargetType targetType, Type type) {
+    public likes(User userId, User targetId, TargetType targetType, Type type) {
         this.userId = userId;
         this.targetId = targetId;
         this.targetType = targetType;
@@ -51,19 +55,19 @@ public class likes {
         return id;
     }
 
-    public Long getUserId() {
+    public User getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(User userId) {
         this.userId = userId;
     }
 
-    public Long getTargetId() {
+    public User getTargetId() {
         return targetId;
     }
 
-    public void setTargetId(Long targetId) {
+    public void setTargetId(User targetId) {
         this.targetId = targetId;
     }
 

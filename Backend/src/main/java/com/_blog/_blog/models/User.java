@@ -24,7 +24,7 @@ public class User {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment
+    @GeneratedValue(strategy = GenerationType.AUTO) // Auto-increment
     private Long id;
 
     @Enumerated(EnumType.STRING)
