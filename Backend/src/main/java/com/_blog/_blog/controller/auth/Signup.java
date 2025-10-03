@@ -1,5 +1,6 @@
 package com._blog._blog.controller.auth;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com._blog._blog.dto.UserRequest;
 import com._blog._blog.models.User;
 import com._blog._blog.repository.UserRepository;
+import com._blog._blog.service.JwtBlacklist;
+import com._blog._blog.utils.JwtUtil;
 
 import jakarta.validation.Valid;
 
@@ -31,10 +34,17 @@ public class Signup {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtUtil jwtUtil; // JWT helper
+
+    @Autowired
+    private JwtBlacklist jwtBlacklist; // optional, for logout
+
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> signup(@Valid @RequestBody UserRequest userRequest) {
         Map<String, String> response = new HashMap<>();
 
+        // Check if username or email exists
         if (userRepository.existsByUsername(userRequest.getUsername())) {
             response.put("error", "Username already exists");
             return new ResponseEntity<>(response, HttpStatus.CONFLICT);
@@ -44,7 +54,8 @@ public class Signup {
             response.put("error", "Email already exists");
             return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         }
-        
+
+        // Save new user
         User user = new User(
                 userRequest.getUsername(),
                 userRequest.getEmail(),
@@ -53,7 +64,13 @@ public class Signup {
         );
 
         User savedUser = userRepository.save(user);
-        response.put("message", "user created seccessfully");
+
+        // Generate JWT
+        String token = jwtUtil.generateToken(savedUser.getUsername(), savedUser.getRole().name());
+
+        response.put("message", "User created successfully");
+        response.put("token", token); // Return JWT
+        response.put("expiresAt", LocalDateTime.now().plusDays(1).toString()); // optional
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
