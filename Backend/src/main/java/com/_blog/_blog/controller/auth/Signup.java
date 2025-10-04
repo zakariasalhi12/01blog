@@ -1,6 +1,5 @@
 package com._blog._blog.controller.auth;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,9 +67,7 @@ public class Signup {
         // Generate JWT
         String token = jwtUtil.generateToken(savedUser.getUsername(), savedUser.getRole().name());
 
-        response.put("message", "User created successfully");
         response.put("token", token); // Return JWT
-        response.put("expiresAt", LocalDateTime.now().plusDays(1).toString()); // optional
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

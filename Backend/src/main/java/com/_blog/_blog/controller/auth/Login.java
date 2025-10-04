@@ -1,6 +1,5 @@
 package com._blog._blog.controller.auth;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,9 +55,7 @@ public class Login {
             // Generate JWT
             String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
 
-            response.put("message", "Login successful");
             response.put("token", token);
-            response.put("expiresAt", LocalDateTime.now().plusDays(1).toString()); // optional
             return ResponseEntity.ok(response);
 
         } catch (AuthenticationException e) {
@@ -68,13 +64,4 @@ public class Login {
         }
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestHeader("Authorization") String authHeader) {
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            LocalDateTime expiresAt = jwtUtil.extractExpiration(token);
-            jwtBlacklist.addToken(token, expiresAt);
-        }
-        return ResponseEntity.ok("Logged out successfully");
-    }
 }

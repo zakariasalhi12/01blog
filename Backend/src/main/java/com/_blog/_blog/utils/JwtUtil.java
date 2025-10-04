@@ -35,7 +35,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    // Extract username from JWT
     public String extractUsername(String token) {
         return parseClaims(token).getSubject();
     }
@@ -45,12 +44,10 @@ public class JwtUtil {
         return expiration.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
-    // Extract role from JWT
     public String extractRole(String token) {
         return (String) parseClaims(token).get("role");
     }
 
-    // Validate token (checks signature and expiration)
     public boolean validateToken(String token) {
         try {
             parseClaims(token);
@@ -60,7 +57,6 @@ public class JwtUtil {
         }
     }
 
-    // Parse claims helper
     private Claims parseClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,10 +26,12 @@ public class User {
         BANNED
     }
 
+    // @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO) // Auto-increment
     private Long id;
 
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.USER;
@@ -35,15 +39,18 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @JsonIgnore
     @Column(nullable = false, unique = true)
     private  String email;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
     private int age;
 
+    
     private String avatar;
 
     @CreationTimestamp
