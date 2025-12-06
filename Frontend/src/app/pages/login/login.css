@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+main {
+    background-color: var(--main-color);
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' width='2000' height='1000' preserveAspectRatio='none' viewBox='0 0 2000 1000'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1193%26quot%3b)' fill='none'%3e%3cpath d='M -426.4288379387723%2c456 C -226.43%2c483 173.57%2c654.8 573.5711620612277%2c591 C 973.57%2c527.2 1173.57%2c138.4 1573.5711620612278%2c137 C 1973.57%2c135.6 2488.29%2c562.4 2573.571162061228%2c584 C 2658.86%2c605.6 2114.71%2c312.8 2000%2c245' stroke='rgba(235%2c 235%2c 235%2c 1)' stroke-width='2'%3e%3c/path%3e%3cpath d='M -608.4308355942364%2c812 C -408.43%2c723.4 -8.43%2c413.4 391.5691644057635%2c369 C 791.57%2c324.6 991.57%2c615 1391.5691644057636%2c590 C 1791.57%2c565 2269.88%2c181.2 2391.5691644057633%2c244 C 2513.26%2c306.8 2078.31%2c772 2000%2c904' stroke='rgba(235%2c 235%2c 235%2c 1)' stroke-width='2'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1193'%3e%3crect width='2000' height='1000' fill='white'%3e%3c/rect%3e%3c/mask%3e%3c/defs%3e%3c/svg%3e");
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    flex-wrap: wrap;
+    
+}
+.container .content {
+    width: 50%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+.container .content h1 {
+    font-size: 60px;
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+}
+.container .content p {
+    line-height: 1.5;
+}
+
+.container .login {
+    width: 30%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
+    border-radius: 20px;
+    height: 450px;
+    min-width: 500px;
+    box-shadow: 1px 1px 20px 20px var(--default-box-shadow-color) ;
+
+}
+
+.container .login h1 {
+    font-size: 50px;
+}
+
+.container .login input {
+    width: 90%;
+    padding: 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    border-bottom: 1px solid #222;
+    background-color: whitesmoke;
+}
+
+.container .login input:focus ,.container .login input:hover  {
+    transform: scale(1.05);
+    transition: all 0.3s linear;
+}
+
+.container .login button {
+    width: 60%;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: #222;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    font-weight: 700;
+}
+.container .login button:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+    transition: all 0.3s linear;
+}
