@@ -2,19 +2,28 @@
     <div class="container">
         <div class="content">
             <h1>Welcome to 01Blog</h1>
-            <p>01Blog is a social blogging platform designed for students to document and share their learning journeys.
+            <p>
+                01Blog is a social blogging platform designed for students to document and share their learning
+                journeys.
                 Users can post insights, discoveries, and progress updates while exploring content from others in the
-                community. The platform encourages engagement through interactive features such as following other
-                learners, reacting to posts, and participating in meaningful discussions.
-                Built with a focus on simplicity and community, 01Blog empowers students to learn, connect, and grow
-                together.</p>
+                community.
+            </p>
         </div>
+
         <div class="login">
             <h1>Login</h1>
-            <input type="text" required placeholder="Email or username">
-            <input type="password" required placeholder="password">
-            <button>Login</button>
-            <p>Don't have account? <a routerLink="/register">Register</a></p>
+
+            <!-- Error message -->
+            <p *ngIf="error" class="error">{{ error }}</p>
+
+            <!-- Inputs with ngModel -->
+            <input type="text" placeholder="Email or username" [(ngModel)]="username" required>
+
+            <input type="password" placeholder="Password" [(ngModel)]="password" required>
+
+            <button (click)="onSubmit()">Login</button>
+
+            <p>Don't have an account? <a routerLink="/register">Register</a></p>
         </div>
     </div>
 </main>

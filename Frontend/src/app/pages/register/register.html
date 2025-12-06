@@ -11,11 +11,19 @@
         </div>
         <div class="login">
             <h1>Register</h1>
-            <input placeholder="Email" required>
-            <input placeholder="Username" required>
-            <input type="password" required placeholder="password">
-            <input type="number" min="15" max="70" value="15">
-            <button>Register</button>
+
+            <!-- Error message -->
+            <p *ngIf="error" class="error">{{ error }}</p>
+
+            <input placeholder="Email" [(ngModel)]="email" required>
+
+            <input placeholder="Username" [(ngModel)]="username" required>
+
+            <input type="password" [(ngModel)]="password" required placeholder="password">
+
+            <input [(ngModel)]="age" type="number" placeholder="age" min="15" max="70" value="15">
+
+            <button (click)="onSubmit()">Register</button>
             <p>Already have account? <a routerLink="/login">Login</a></p>
         </div>
     </div>
