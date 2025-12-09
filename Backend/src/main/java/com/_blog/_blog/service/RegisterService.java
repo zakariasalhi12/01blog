@@ -11,21 +11,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com._blog._blog.dto.UserRequest;
 import com._blog._blog.models.User;
 import com._blog._blog.repository.UserRepository;
-import com._blog._blog.service.JwtBlacklist;
 import com._blog._blog.utils.JwtUtil;
 
 import jakarta.validation.Valid;
 
 @Service
 public class RegisterService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -35,22 +31,18 @@ public class RegisterService {
     @Autowired
     private JwtUtil jwtUtil; // JWT helper
 
-    @Autowired
-    private JwtBlacklist jwtBlacklist; // optional, for logout
-
-
-    public ResponseEntity<Map<String, String>> signup(@Valid @RequestBody UserRequest userRequest) {
+    public ResponseEntity<Map<String, String>> signup(UserRequest userRequest) {
         Map<String, String> response = new HashMap<>();
 
         // Check if username or email exists
         if (userRepository.existsByUsername(userRequest.getUsername())) {
             response.put("error", "Username already exists");
-            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
         if (userRepository.existsByEmail(userRequest.getEmail())) {
             response.put("error", "Email already exists");
-            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
         // Save new user

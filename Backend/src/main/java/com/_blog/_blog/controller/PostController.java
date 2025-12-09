@@ -27,46 +27,22 @@ import com._blog._blog.models.User;
 import com._blog._blog.repository.PostRepository;
 import com._blog._blog.repository.UserRepository;
 import com._blog._blog.service.FileStorageService;
+import com._blog._blog.service.PostService;
 
 @RestController
 @RequestMapping("/api")
 public class PostController {
 
     @Autowired
-    private PostRepository postRepository;
+    private PostService postService;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    private final FileStorageService fileStorageService;
-
-    public PostController(FileStorageService fileStorageService) {
-        this.fileStorageService = fileStorageService;
-    }
     // CREATE a post
-
     @PostMapping("/posts")
     public ResponseEntity<?> createPost(
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam(value = "file", required = false) MultipartFile file) {
-
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> optionalAuthor = userRepository.findByUsername(username);
-        if (!optionalAuthor.isPresent()) {
-            return ResponseEntity.status(404).body("User not found");
-        }
-        User author = optionalAuthor.get();
-
-        String filePath = null;
-        if (file != null && !file.isEmpty()) {
-            filePath = fileStorageService.storeFile(file);
-        }
-
-        Post post = new Post(author, title, content, filePath);
-        postRepository.save(post);
-
-        return ResponseEntity.ok("Post created successfully");
+        return postService.createPost(title, content, file);
     }
 
     // GET all posts
@@ -75,40 +51,13 @@ public class PostController {
             @RequestParam(defaultValue = "0") int page, // page number, 0-indexed
             @RequestParam(defaultValue = "20") int size // page size
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Post> postsPage = postRepository.findAll(pageable);
-
-        // Optionally, convert the posts to include full file URLs
-        List<Map<String, Object>> postsList = postsPage.getContent().stream().map(post -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", post.getId());
-            map.put("title", post.getTitle());
-            map.put("content", post.getContent());
-            map.put("author", post.getAuthor().getUsername());
-            map.put("createdAt", post.getCreatedAt());
-            if (post.getVideoOrImageUrl() != null) {
-                map.put("fileUrl", "/uploads/" + post.getVideoOrImageUrl());
-            } else {
-                map.put("fileUrl", null);
-            }
-            return map;
-        }).toList();
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("posts", postsList);
-        response.put("currentPage", postsPage.getNumber());
-        response.put("totalPages", postsPage.getTotalPages());
-        response.put("totalPosts", postsPage.getTotalElements());
-
-        return ResponseEntity.ok(response);
+        return postService.getPosts(page, size);
     }
 
     // GET posts by logged-in user
     @GetMapping("/posts/me")
-    public ResponseEntity<List<Post>> getMyPosts() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<Post> posts = postRepository.findAllByAuthorUsername(username);
-        return ResponseEntity.ok(posts);
+    public ResponseEntity<?> getMyPosts() {
+        return postService.getMyPosts();
     }
 
     @PutMapping("/posts/{id}")
@@ -118,49 +67,12 @@ public class PostController {
             @RequestParam("content") String content,
             @RequestParam(value = "file", required = false) MultipartFile file) {
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        Optional<Post> optionalPost = postRepository.findById(id);
-        if (!optionalPost.isPresent()) {
-            return ResponseEntity.status(404).body("Post not found");
-        }
-
-        Post post = optionalPost.get();
-
-        if (!post.getAuthor().getUsername().equals(username)) {
-            return ResponseEntity.status(403).body("You are not allowed to update this post");
-        }
-
-        post.setTitle(title);
-        post.setContent(content);
-
-        if (file != null && !file.isEmpty()) {
-            String storedFileName = fileStorageService.storeFile(file);
-            post.setVideoOrImageUrl(storedFileName);
-        }
-
-        postRepository.save(post);
-
-        return ResponseEntity.ok(post);
+        return postService.updatePost(id, title, content, file);
     }
 
     // DELETE a post
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        Optional<Post> optionalPost = postRepository.findById(id);
-        if (!optionalPost.isPresent()) {
-            return ResponseEntity.status(404).body("Post not found");
-        }
-
-        Post post = optionalPost.get();
-
-        if (!post.getAuthor().getUsername().equals(username)) {
-            return ResponseEntity.status(403).body("You are not allowed to delete this post");
-        }
-
-        postRepository.delete(post);
-        return ResponseEntity.ok("Post deleted successfully");
+        return postService.deletePost(id);
     }
 }

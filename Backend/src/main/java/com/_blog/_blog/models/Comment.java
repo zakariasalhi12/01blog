@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "comments")
 
-public class comments {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -36,13 +36,21 @@ public class comments {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public comments() {}
+    public Comment() {}
+
+    public Comment(User user, Post post, String content) {
+        this.user = user;
+        this.post = post;
+        this.content = content;
+    }
+
+    
 
     public Long getId() {
         return id;
     }
 
-    public User getUserId() {
+    public User getUser() {
         return user;
     }
 

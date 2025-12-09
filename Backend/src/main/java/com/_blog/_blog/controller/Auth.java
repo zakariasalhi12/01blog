@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com._blog._blog.service.LoginService;
 import com._blog._blog.service.RegisterService;
+
+import jakarta.validation.Valid;
+
 import com._blog._blog.dto.LoginRequest;
 import com._blog._blog.dto.UserRequest;
 import com._blog._blog.service.LogoutService;
@@ -31,7 +34,7 @@ public class Auth
     private RegisterService registerService;
     
     @PostMapping("/signup")
-    public ResponseEntity<?> register(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<?> register(@Valid @RequestBody UserRequest userRequest) {
         return registerService.signup(userRequest);
     }
 
