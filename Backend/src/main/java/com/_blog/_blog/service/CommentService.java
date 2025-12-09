@@ -1,6 +1,8 @@
 package com._blog._blog.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 
 import com._blog._blog.dto.CommentRequest;
+import com._blog._blog.dto.CommentResponse;
 import com._blog._blog.models.Comment;
 import com._blog._blog.models.Post;
 import com._blog._blog.models.User;
@@ -56,7 +59,7 @@ public class CommentService {
     }
 
     // Get paginated comments for a post, newest first
-    public ResponseEntity<?> getCommentsByPost(Long postId,int page,int size) {
+    public ResponseEntity<?> getCommentsByPost(Long postId, int page, int size) {
         Optional<Post> optionalPost = postRepository.findById(postId);
         if (!optionalPost.isPresent()) {
             return ResponseEntity.status(404).body("Post not found");
@@ -66,7 +69,19 @@ public class CommentService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Comment> commentsPage = commentRepository.findByPost(post, pageable);
 
-        return ResponseEntity.ok(commentsPage);
+        // Map comments to DTO
+        List<CommentResponse> commentResponses = commentsPage.stream()
+                .map(c -> new CommentResponse(
+                c.getId(),
+                c.getContent(),
+                c.getCreatedAt(),
+                c.getUser().getId(),
+                c.getUser().getUsername(),
+                c.getUser().getRole().name()
+        ))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(commentResponses);
     }
 
     // Delete comment with permission check
