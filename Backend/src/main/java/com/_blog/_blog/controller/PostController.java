@@ -3,6 +3,7 @@ package com._blog._blog.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,8 +52,11 @@ public class PostController {
             @RequestParam(value = "file", required = false) MultipartFile file) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User author = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Optional<User> optionalAuthor = userRepository.findByUsername(username);
+        if (!optionalAuthor.isPresent()) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+        User author = optionalAuthor.get();
 
         String filePath = null;
         if (file != null && !file.isEmpty()) {
@@ -116,8 +120,12 @@ public class PostController {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+        Optional<Post> optionalPost = postRepository.findById(id);
+        if (!optionalPost.isPresent()) {
+            return ResponseEntity.status(404).body("Post not found");
+        }
+
+        Post post = optionalPost.get();
 
         if (!post.getAuthor().getUsername().equals(username)) {
             return ResponseEntity.status(403).body("You are not allowed to update this post");
@@ -141,8 +149,12 @@ public class PostController {
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+        Optional<Post> optionalPost = postRepository.findById(id);
+        if (!optionalPost.isPresent()) {
+            return ResponseEntity.status(404).body("Post not found");
+        }
+
+        Post post = optionalPost.get();
 
         if (!post.getAuthor().getUsername().equals(username)) {
             return ResponseEntity.status(403).body("You are not allowed to delete this post");

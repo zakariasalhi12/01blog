@@ -1,87 +1,77 @@
-// package com._blog._blog.models;
+package com._blog._blog.models;
 
-// import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 
-// import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CreationTimestamp;
 
-// import jakarta.persistence.Column;
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.EnumType;
-// import jakarta.persistence.Enumerated;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
-// import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
-// @Entity
-// @Table(name = "comments")
+@Entity
+@Table(name = "comments")
 
-// public class comments {
+public class comments {
 
-//     public enum TargetType {
-//         POST,
-//         COMMENT
-//     }
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Long id;
 
-//     @Id
-//     @GeneratedValue(strategy= GenerationType.AUTO)
-//     private Long id;
+    @ManyToOne
+    @JoinColumn(name = "user_id" , nullable=false)
+    private User user;
 
-//     @Enumerated(EnumType.STRING)
-//     private TargetType targetType;
+    @ManyToOne
+    @JoinColumn(name = "post_id" , nullable=false)
+    private Post post;
 
-//     private User userId;
+    @Column(nullable = false)
+    private String content;
 
-//     private Long targetId;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-//     @Column(nullable = false)
-//     private String content;
+    public comments() {}
 
-//     @CreationTimestamp
-//     private LocalDateTime createdAt;
+    public Long getId() {
+        return id;
+    }
 
-//     public comments() {}
+    public User getUserId() {
+        return user;
+    }
 
-//     public comments(TargetType targetType, User userId, Long targetId, String content) {
-//         this.targetType = targetType;
-//         this.userId = userId;
-//         this.targetId = targetId;
-//         this.content = content;
-//     }
+    public void setUserId(User user) {
+        this.user = user;
+    }
 
-//     public Long getId() {
-//         return id;
-//     }
+    public Post getPost() {
+        return post;
+    }
 
-//     public TargetType getTargetType() {
-//         return targetType;
-//     }
+    public void setPost(Post post) {
+        this.post = post;
+    }
 
-//     public void setTargetType(TargetType targetType) {
-//         this.targetType = targetType;
-//     }
+    public String getContent() {
+        return content;
+    }
 
-//     public User getUserId() {
-//         return userId;
-//     }
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-//     public void setUserId(User userId) {
-//         this.userId = userId;
-//     }
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-//     public Long getTargetId() {
-//         return targetId;
-//     }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-//     public void setTargetId(Long targetId) {
-//         this.targetId = targetId;
-//     }
-
-//     public String getContent() {
-//         return content;
-//     }
-
-//     public void setContent(String content) {
-//         this.content = content;
-//     }
-// }
+}

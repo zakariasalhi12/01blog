@@ -1,5 +1,6 @@
-package com._blog._blog.controller.auth;
+package com._blog._blog.service;
 
+import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,10 +24,8 @@ import com._blog._blog.utils.JwtUtil;
 
 import jakarta.validation.Valid;
 
-@RestController
-@RequestMapping("/api/auth")
-public class Signup {
-
+@Service
+public class RegisterService {
     @Autowired
     private UserRepository userRepository;
 
@@ -39,7 +38,7 @@ public class Signup {
     @Autowired
     private JwtBlacklist jwtBlacklist; // optional, for logout
 
-    @PostMapping("/signup")
+
     public ResponseEntity<Map<String, String>> signup(@Valid @RequestBody UserRequest userRequest) {
         Map<String, String> response = new HashMap<>();
 

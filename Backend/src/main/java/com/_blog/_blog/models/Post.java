@@ -23,7 +23,7 @@ public class Post {
 
     // Assuming there's a User entity you're referencing
     @ManyToOne
-    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_post_author"))
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_post_author"))
     private User author;
 
     private String title;

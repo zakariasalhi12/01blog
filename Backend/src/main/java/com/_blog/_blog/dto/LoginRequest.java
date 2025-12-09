@@ -1,12 +1,12 @@
 package com._blog._blog.dto;
 
 public class LoginRequest {
-    private String username;
+    private String login;
     private String password;
 
     // getters and setters
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getLogin() { return login; }
+    public void setLogin(String username) { this.login = username; }
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
