@@ -4,11 +4,12 @@ import { Post } from '../../models/post.model';
 import { BackedURL } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { PostCard } from '../../components/post-card/post-card';
+import { CreatePost } from '../../components/create-post/create-post';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, PostCard],
+  imports: [CommonModule, PostCard , CreatePost],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
