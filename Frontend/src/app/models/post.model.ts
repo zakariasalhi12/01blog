@@ -7,6 +7,7 @@ export interface Post {
   likesCount: number;
   commentsCount: number;
   fileUrl?: string;
+  avatar: string;
   mediaType?: 'image' | 'video' | 'unknown';
 }
 

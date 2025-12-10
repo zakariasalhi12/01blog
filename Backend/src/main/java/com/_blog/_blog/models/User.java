@@ -64,6 +64,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.age = age;
+        this.avatar = "/uploads/profile.jpg"; // default avatar
     }
 
     // getters and setters

@@ -6,3 +6,12 @@
     flex-direction: column;
     gap: 10px;
 }
+
+
+
+.loading,
+.end {
+  text-align: center;
+  margin: 20px 0;
+  color: gray;
+}

@@ -12,25 +12,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com._blog._blog.models.Post;
 import com._blog._blog.models.User;
+import com._blog._blog.repository.CommentRepository;
 import com._blog._blog.repository.PostRepository;
 import com._blog._blog.repository.UserRepository;
-import com._blog._blog.service.FileStorageService;
-
-import org.springframework.stereotype.Service;
-
-import com._blog._blog.repository.CommentRepository;
 
 @Service
 public class PostService {
@@ -44,11 +33,10 @@ public class PostService {
     @Autowired
     private FileStorageService fileStorageService;
 
-
     @Autowired
     private CommentRepository commentRepository;
 
-    // Create post
+    // ---------------- Create Post ----------------
     public ResponseEntity<?> createPost(String title, String content, MultipartFile file) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -60,21 +48,30 @@ public class PostService {
 
         String filePath = null;
         if (file != null && !file.isEmpty()) {
-            filePath = fileStorageService.storeFile(file);
+            ResponseEntity<?> fileResponse = fileStorageService.storeFile(file);
+
+            if (!fileResponse.getStatusCode().is2xxSuccessful()) {
+                return fileResponse;
+            }
+
+            Map<String, String> body = (Map<String, String>) fileResponse.getBody();
+            filePath = body.get("fileName");
         }
 
         Post post = new Post(author, title, content, filePath);
         postRepository.save(post);
 
-        return ResponseEntity.ok("Post created successfully");
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Post created successfully");
+        response.put("postId", post.getId());
+        return ResponseEntity.ok(response);
     }
 
-    // Get posts with pagination
+    // ---------------- Get Posts with Pagination ----------------
     public ResponseEntity<?> getPosts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Post> postsPage = postRepository.findAll(pageable);
 
-        
         List<Map<String, Object>> postsList = postsPage.getContent().stream().map(post -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", post.getId());
@@ -85,18 +82,16 @@ public class PostService {
             map.put("likesCount", post.getLikesCount());
             map.put("avatar", post.getAuthor().getAvatar());
 
-            // Add file URL if exists
-            String fileUrl = null;
-            String mediaType = null;
+            // File URL & media type
             if (post.getVideoOrImageUrl() != null) {
-                fileUrl = "/uploads/" + post.getVideoOrImageUrl();
+                String fileUrl = "/uploads/" + post.getVideoOrImageUrl();
                 map.put("fileUrl", fileUrl);
 
-                // Determine media type by extension
                 String lower = post.getVideoOrImageUrl().toLowerCase();
+                String mediaType = null;
                 if (lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".ogg")) {
                     mediaType = "video";
-                } else if (lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".gif")) {
+                } else if (lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".gif") || lower.endsWith(".webp")) {
                     mediaType = "image";
                 } else {
                     mediaType = "unknown";
@@ -107,7 +102,7 @@ public class PostService {
                 map.put("mediaType", null);
             }
 
-            // Count comments
+            // Comment count
             long commentCount = commentRepository.countByPostId(post.getId());
             map.put("commentsCount", commentCount);
 
@@ -123,14 +118,14 @@ public class PostService {
         return ResponseEntity.ok(response);
     }
 
-    // Get posts by logged-in user
+    // ---------------- Get Logged-in User's Posts ----------------
     public ResponseEntity<List<Post>> getMyPosts() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         List<Post> posts = postRepository.findAllByAuthorUsername(username);
         return ResponseEntity.ok(posts);
     }
 
-    // Update post
+    // ---------------- Update Post ----------------
     public ResponseEntity<?> updatePost(Long id, String title, String content, MultipartFile file) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -150,8 +145,12 @@ public class PostService {
         post.setContent(content);
 
         if (file != null && !file.isEmpty()) {
-            String storedFileName = fileStorageService.storeFile(file);
-            post.setVideoOrImageUrl(storedFileName);
+            ResponseEntity<?> fileResponse = fileStorageService.storeFile(file);
+            if (!fileResponse.getStatusCode().is2xxSuccessful()) {
+                return fileResponse;
+            }
+            Map<String, String> body = (Map<String, String>) fileResponse.getBody();
+            post.setVideoOrImageUrl(body.get("fileName"));
         }
 
         postRepository.save(post);
@@ -159,7 +158,7 @@ public class PostService {
         return ResponseEntity.ok(post);
     }
 
-    // Delete post
+    // ---------------- Delete Post ----------------
     public ResponseEntity<?> deletePost(Long id) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 

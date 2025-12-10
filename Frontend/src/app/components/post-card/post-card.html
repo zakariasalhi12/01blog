@@ -6,10 +6,10 @@
 
     <div class="post-header">
         <div>
-            <img src="post.avatar" alt="avatar">
+            <img [src]="getFullFileUrl(post.avatar)" alt="avatar">
             <span>{{ post.author }}</span>
         </div>
-        <span class="date">{{ post.createdAt | date:'medium' }}</span>
+        <span class="date">{{ timeAgo(post.createdAt) }}</span>
     </div>
 
     <div class="post-content">

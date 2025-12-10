@@ -1,7 +1,14 @@
-<div *ngIf="loading">Loading...</div>
-<div *ngIf="error">{{ error }}</div>
+<div class="container">
+  <app-post-card
+    *ngFor="let post of posts"
+    [post]="post">
+  </app-post-card>
+</div>
 
+<div class="loading" *ngIf="loading">
+  Loading posts...
+</div>
 
-<div *ngIf="!loading && !error" class="container">
-  <app-post-card *ngFor="let post of posts" [post]="post"></app-post-card>
+<div class="end" *ngIf="!hasMore && !loading">
+  No more posts.
 </div>
