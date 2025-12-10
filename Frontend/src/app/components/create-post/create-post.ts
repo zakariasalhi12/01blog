@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PostService } from '../../services/post.service';
@@ -13,7 +13,7 @@ import { PostService } from '../../services/post.service';
 export class CreatePost {
   postForm: FormGroup;
   selectedFile: File | null = null;
-  previewUrl: string | ArrayBuffer | null = null;
+  previewUrl = signal<string | ArrayBuffer | null>(null); 
   isImage = false;
   isVideo = false;
 
@@ -36,7 +36,7 @@ export class CreatePost {
 
       const reader = new FileReader();
       reader.onload = () => {
-        this.previewUrl = reader.result;
+        this.previewUrl.set(reader.result);
       };
       reader.readAsDataURL(this.selectedFile);
     }
@@ -56,7 +56,7 @@ export class CreatePost {
           // Reset form & preview
           this.postForm.reset();
           this.selectedFile = null;
-          this.previewUrl = null;
+          this.previewUrl.set(null);
           this.isImage = false;
           this.isVideo = false;
         },

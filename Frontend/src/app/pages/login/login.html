@@ -16,7 +16,7 @@
             <h1>Login</h1>
 
             <!-- Error message -->
-            <p *ngIf="error" class="error">{{ error }}</p>
+            <p *ngIf="error" class="error">{{ error() }}</p>
 
             <!-- Inputs with ngModel -->
             <input type="text" placeholder="Email or username" [(ngModel)]="login" required>

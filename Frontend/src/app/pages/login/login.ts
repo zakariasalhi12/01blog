@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {Header} from '../../components/header/header'
+import { sign } from 'node:crypto';
 @Component({
   selector: 'app-login',
   standalone : true,
@@ -15,13 +16,12 @@ export class Login {
 
   login = '';
   password = '';
-  error = '';
+  error = signal('');
 
   constructor(private auth: AuthService) {}
 
   onSubmit() {
-      console.log("Clicked login!", this.login, this.password);
-    this.error = '';
+    this.error.set('');
 
     this.auth.login(this.login, this.password).subscribe({
       next: (res) => {
@@ -31,7 +31,7 @@ export class Login {
         window.location.href = '/';
       },
       error: (err) => {
-        this.error = err.error.error || 'Login failed';
+        this.error.set(err.error.error || 'Login failed');
       }
     });
   }

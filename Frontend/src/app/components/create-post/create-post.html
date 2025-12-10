@@ -17,8 +17,8 @@
   </div>
 
   <div class="preview" *ngIf="previewUrl">
-    <img *ngIf="isImage" [src]="previewUrl" alt="Preview" />
-    <video *ngIf="isVideo" [src]="previewUrl" controls></video>
+    <img *ngIf="isImage" [src]="previewUrl()" alt="Preview" />
+    <video *ngIf="isVideo" [src]="previewUrl()" controls></video>
   </div>
 
   <button type="submit" [disabled]="postForm.invalid">Submit</button>

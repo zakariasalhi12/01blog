@@ -72,10 +72,14 @@
     align-items: center;
     gap: 5px;
     padding: 5px 15px;
-    border-radius: 10px;
+    border-radius: 20px;
     color: black;
     border: 1px solid #c4c4c4;
     cursor: pointer;
+}
+.post-footer div mat-icon {
+    font-size: 20px;
+    color: #202020;
 }
 
 .post-footer div:hover {

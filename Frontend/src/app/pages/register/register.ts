@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -17,12 +17,12 @@ export class Register {
   email = '';
   password = '';
   age = 15;
-  error = '';
+  error = signal('');
 
   constructor(private auth: AuthService) {}
 
   onSubmit() {
-    this.error = '';
+    this.error.set('');
     
     // Prepare data for backend
     const data = {
@@ -40,7 +40,7 @@ export class Register {
         window.location.href = '/';
       },
       error: (err) => {
-        this.error = JSON.stringify(err.error);
+        this.error.set(JSON.stringify(err.error));
       }
     });
   }

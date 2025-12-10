@@ -14,7 +14,7 @@
             <h1>Register</h1>
 
             <!-- Error message -->
-            <p *ngIf="error" class="error">{{ error }}</p>
+            <p *ngIf="error" class="error">{{ error() }}</p>
 
             <input placeholder="Email" [(ngModel)]="email" required>
 
