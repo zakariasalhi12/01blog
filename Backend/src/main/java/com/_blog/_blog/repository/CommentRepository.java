@@ -14,4 +14,5 @@ import com._blog._blog.models.Comment;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByPost(Post post, Pageable pageable);
+    long countByPostId(Long postId);
 }

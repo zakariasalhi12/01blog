@@ -30,6 +30,8 @@ import com._blog._blog.service.FileStorageService;
 
 import org.springframework.stereotype.Service;
 
+import com._blog._blog.repository.CommentRepository;
+
 @Service
 public class PostService {
 
@@ -42,8 +44,12 @@ public class PostService {
     @Autowired
     private FileStorageService fileStorageService;
 
+
+    @Autowired
+    private CommentRepository commentRepository;
+
     // Create post
-    public ResponseEntity<?> createPost(String title,String content, MultipartFile file) {
+    public ResponseEntity<?> createPost(String title, String content, MultipartFile file) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> optionalAuthor = userRepository.findByUsername(username);
@@ -68,7 +74,7 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Post> postsPage = postRepository.findAll(pageable);
 
-        // Optionally, convert the posts to include full file URLs
+        
         List<Map<String, Object>> postsList = postsPage.getContent().stream().map(post -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", post.getId());
@@ -77,11 +83,34 @@ public class PostService {
             map.put("author", post.getAuthor().getUsername());
             map.put("createdAt", post.getCreatedAt());
             map.put("likesCount", post.getLikesCount());
+            map.put("avatar", post.getAuthor().getAvatar());
+
+            // Add file URL if exists
+            String fileUrl = null;
+            String mediaType = null;
             if (post.getVideoOrImageUrl() != null) {
-                map.put("fileUrl", "/uploads/" + post.getVideoOrImageUrl());
+                fileUrl = "/uploads/" + post.getVideoOrImageUrl();
+                map.put("fileUrl", fileUrl);
+
+                // Determine media type by extension
+                String lower = post.getVideoOrImageUrl().toLowerCase();
+                if (lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".ogg")) {
+                    mediaType = "video";
+                } else if (lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".gif")) {
+                    mediaType = "image";
+                } else {
+                    mediaType = "unknown";
+                }
+                map.put("mediaType", mediaType);
             } else {
                 map.put("fileUrl", null);
+                map.put("mediaType", null);
             }
+
+            // Count comments
+            long commentCount = commentRepository.countByPostId(post.getId());
+            map.put("commentsCount", commentCount);
+
             return map;
         }).toList();
 
