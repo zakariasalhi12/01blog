@@ -8,6 +8,8 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com._blog._blog.models.User;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -19,16 +21,17 @@ public class JwtUtil {
     private final Key key;
     private final long EXPIRATION;
 
-    public JwtUtil(@Value("${jwt.secret}") String secret, @Value("${jwt.expiration}") long expiration) {
+    public JwtUtil(@Value("${jwt.secret}") String secret, 
+                   @Value("${jwt.expiration}") long expiration) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.EXPIRATION = expiration;
     }
 
-    // Generate JWT with username + role
-    public String generateToken(String username, String role) {
+    // Generate JWT directly from User entity
+    public String generateToken(User user) {
         return Jwts.builder()
-                .setSubject(username)
-                .claim("role", role)
+                .setSubject(user.getUsername())
+                .claim("role", user.getRole().name()) // role from DB
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
                 .signWith(key)
@@ -41,7 +44,9 @@ public class JwtUtil {
 
     public LocalDateTime extractExpiration(String token) {
         Date expiration = parseClaims(token).getExpiration();
-        return expiration.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return expiration.toInstant()
+                         .atZone(ZoneId.systemDefault())
+                         .toLocalDateTime();
     }
 
     public String extractRole(String token) {
@@ -59,9 +64,10 @@ public class JwtUtil {
 
     private Claims parseClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+                   .setSigningKey(key)
+                   .build()
+                   .parseClaimsJws(token)
+                   .getBody();
     }
 }
+

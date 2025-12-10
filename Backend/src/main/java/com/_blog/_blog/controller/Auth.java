@@ -2,6 +2,8 @@ package com._blog._blog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,12 +18,13 @@ import jakarta.validation.Valid;
 
 import com._blog._blog.dto.LoginRequest;
 import com._blog._blog.dto.UserRequest;
+import com._blog._blog.service.LoggedService;
 import com._blog._blog.service.LogoutService;
 
 @RestController
 @RequestMapping("/api/auth")
-public class Auth 
-{
+public class Auth {
+
     @Autowired
     private LoginService loginService;
 
@@ -32,7 +35,7 @@ public class Auth
 
     @Autowired
     private RegisterService registerService;
-    
+
     @PostMapping("/signup")
     public ResponseEntity<?> register(@Valid @RequestBody UserRequest userRequest) {
         return registerService.signup(userRequest);
@@ -44,5 +47,14 @@ public class Auth
     @GetMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
         return logoutService.logout(authHeader);
+    }
+
+
+    @Autowired
+    private LoggedService loggedService;
+
+    @GetMapping("/logged")
+    public ResponseEntity<?> checkLoggedIn() {
+        return loggedService.checkLoggedIn();
     }
 }

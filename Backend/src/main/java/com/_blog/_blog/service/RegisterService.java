@@ -56,7 +56,7 @@ public class RegisterService {
         User savedUser = userRepository.save(user);
 
         // Generate JWT
-        String token = jwtUtil.generateToken(savedUser.getUsername(), savedUser.getRole().name());
+        String token = jwtUtil.generateToken(savedUser);
 
         response.put("token", token); // Return JWT
         return new ResponseEntity<>(response, HttpStatus.CREATED);

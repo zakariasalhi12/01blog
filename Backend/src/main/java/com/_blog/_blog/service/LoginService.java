@@ -76,10 +76,7 @@ public class LoginService {
             );
 
             // Generate JWT
-            String token = jwtUtil.generateToken(
-                user.getUsername(),
-                user.getRole().name()
-            );
+            String token = jwtUtil.generateToken(user);
 
             response.put("token", token);
             return ResponseEntity.ok(response);

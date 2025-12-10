@@ -13,17 +13,17 @@ import { CommonModule } from '@angular/common';
 })
 export class Login {
 
-  username = '';
+  login = '';
   password = '';
   error = '';
 
   constructor(private auth: AuthService) {}
 
   onSubmit() {
-      console.log("Clicked login!", this.username, this.password);
+      console.log("Clicked login!", this.login, this.password);
     this.error = '';
 
-    this.auth.login(this.username, this.password).subscribe({
+    this.auth.login(this.login, this.password).subscribe({
       next: (res) => {
         this.auth.saveToken(res.token);
         console.log('Logged in successfully');
