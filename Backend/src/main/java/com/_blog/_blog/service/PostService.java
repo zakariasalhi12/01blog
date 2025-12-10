@@ -15,9 +15,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com._blog._blog.models.Like;
 import com._blog._blog.models.Post;
 import com._blog._blog.models.User;
 import com._blog._blog.repository.CommentRepository;
+import com._blog._blog.repository.LikeRepository;
 import com._blog._blog.repository.PostRepository;
 import com._blog._blog.repository.UserRepository;
 
@@ -35,6 +37,9 @@ public class PostService {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private LikeRepository likeRepository;
 
     // ---------------- Create Post ----------------
     public ResponseEntity<?> createPost(String title, String content, MultipartFile file) {
@@ -69,9 +74,18 @@ public class PostService {
 
     // ---------------- Get Posts with Pagination ----------------
     public ResponseEntity<?> getPosts(int page, int size) {
+
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByUsername(username).orElse(null);
+        if (currentUser == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Post> postsPage = postRepository.findAll(pageable);
 
+        
         List<Map<String, Object>> postsList = postsPage.getContent().stream().map(post -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", post.getId());
@@ -81,6 +95,13 @@ public class PostService {
             map.put("createdAt", post.getCreatedAt());
             map.put("likesCount", post.getLikesCount());
             map.put("avatar", post.getAuthor().getAvatar());
+            
+            Optional<Like> liked = likeRepository.findByUserAndPost(currentUser, post);
+            if (liked.isPresent()) {
+                map.put("likedByCurrentUser", true);
+            } else {
+                map.put("likedByCurrentUser", false);
+            }
 
             // File URL & media type
             if (post.getVideoOrImageUrl() != null) {

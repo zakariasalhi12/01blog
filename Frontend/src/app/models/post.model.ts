@@ -9,6 +9,7 @@ export interface Post {
   fileUrl?: string;
   avatar: string;
   mediaType?: 'image' | 'video' | 'unknown';
+  likedByCurrentUser: boolean;
 }
 
 export interface PostsResponse {

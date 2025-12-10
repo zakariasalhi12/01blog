@@ -3,7 +3,7 @@ import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Post } from '../../models/post.model';
 import { BackedURL } from '../../../environments/environment';
-
+import { LikesService } from '../../services/likes.service';
 @Component({
   selector: 'app-post-card',
   imports: [MatIcon, CommonModule],
@@ -13,6 +13,8 @@ import { BackedURL } from '../../../environments/environment';
 })
 export class PostCard {
 
+
+  constructor(private likesService : LikesService) { }
 
   public timeAgo(date: string | Date): string {
     const now = new Date();
@@ -42,8 +44,18 @@ export class PostCard {
 
   public getFullFileUrl(fileUrl: string | undefined): string | undefined {
     if (!fileUrl) return undefined;
-    console.log('Computed full file URL:', `${BackedURL}${fileUrl}`);
     return `${BackedURL}${fileUrl}`; // no extra slash if your API already returns '/uploads/...'
+  }
+
+  likePost(postId: number): void {
+    this.likesService.likePost(postId).subscribe({
+      next: (res) => {
+        this.post.likesCount = res;
+      },
+      error: (err) => {
+        console.error('Error liking post', err);
+      }
+    });
   }
 
   @Input() post!: Post; // receives a post object from parent

@@ -67,6 +67,15 @@
     gap: 10px;
 }
 
+.post-footer .active {
+    color: #1976d2;
+    border: 1px solid #1976d2;
+}
+
+.post-footer .active mat-icon {
+    color: #1976d2;
+}
+
 .post-footer div {
     display: flex;
     align-items: center;
