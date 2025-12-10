@@ -8,11 +8,11 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  login(username: string, password: string): Observable<any> {
+  login(login: string, password: string): Observable<any> {
     return this.http.post(`${APIUrl}/auth/login`, {
-      username,
+      login,
       password
     });
   }
@@ -24,6 +24,15 @@ export class AuthService {
   logout(): Observable<any> {
     return this.http.get(`${APIUrl}/logout`);
   }
+
+  logged(): Observable<any> {
+    const token = localStorage.getItem('token') || '';
+    return this.http.get(`${APIUrl}/auth/logged`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+
 
   // Store token
   saveToken(token: string) {

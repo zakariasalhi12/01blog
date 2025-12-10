@@ -34,6 +34,7 @@ main {
     font-optical-sizing: auto;
     font-weight: 600;
     font-style: normal;
+    margin-bottom: 20px;
 }
 .container .content p {
     line-height: 1.5;
