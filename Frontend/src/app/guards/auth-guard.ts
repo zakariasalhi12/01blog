@@ -9,7 +9,6 @@ export const authGuard: CanActivateFn = async (route, state) => {
 
   try {
     const user = await authService.logged().toPromise();
-    console.log("AuthGuard - logged user:", user);
 
     if (user.role === 'ADMIN' && state.url !== '/admin') {
       router.navigate(['/admin']);
