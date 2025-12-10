@@ -47,12 +47,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     String username = jwtUtil.extractUsername(token);
                     String role = jwtUtil.extractRole(token);
 
-                    // Create authentication token with ROLE_ prefix
                     UsernamePasswordAuthenticationToken auth
                             = new UsernamePasswordAuthenticationToken(
                                     username,
                                     null,
-                                    List.of(() -> "ROLE_" + role)
+                                    List.of(() -> role)
                             );
 
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
