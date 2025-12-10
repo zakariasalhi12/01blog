@@ -21,3 +21,5 @@
     --default-box-shadow-color: #e4e3e3;
     --white-smoke: #fafafa;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

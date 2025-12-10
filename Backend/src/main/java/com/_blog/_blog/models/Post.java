@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "posts")
@@ -21,7 +22,6 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    // Assuming there's a User entity you're referencing
     @ManyToOne
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_post_author"))
     private User author;
@@ -33,6 +33,10 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    // Likes counter
+    @Column(nullable = false , name = "likes_count")
+    private long likesCount = 0;
+
     // Constructors
     public Post() {}
 
@@ -43,36 +47,22 @@ public class Post {
         this.videoOrImageUrl = videoOrImageUrl;
     }
 
-    public Long getId() {
-        return id;
-    }
+    // Getters and setters
+    public Long getId() { return id; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
+    public User getAuthor() { return author; }
+    public void setAuthor(User author) { this.author = author; }
+    public String getVideoOrImageUrl() { return videoOrImageUrl; }
+    public void setVideoOrImageUrl(String videoOrImageUrl) { this.videoOrImageUrl = videoOrImageUrl; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
 
-    public String getTitle() {
-        return title;
-    }
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    public String getContent() {
-        return content;
-    }
-    public void setContent(String content) {
-        this.content = content;
-    }
-    public User getAuthor() {
-        return author;
-    }
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-    public String getVideoOrImageUrl() {
-        return videoOrImageUrl;
-    }
-    public void setVideoOrImageUrl(String videoOrImageUrl) {
-        this.videoOrImageUrl = videoOrImageUrl;
-    }
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+    public long getLikesCount() { return likesCount; }
+    public void setLikesCount(long likesCount) { this.likesCount = likesCount; }
 
+    // Helper methods
+    public void incrementLikes() { this.likesCount++; }
+    public void decrementLikes() { if(this.likesCount > 0) this.likesCount--; }
 }

@@ -77,7 +77,7 @@ public class CommentService {
                 c.getCreatedAt(),
                 c.getUser().getId(),
                 c.getUser().getUsername(),
-                c.getUser().getRole().name()
+                c.getLikesCount()
         ))
                 .collect(Collectors.toList());
 

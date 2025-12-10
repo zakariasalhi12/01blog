@@ -76,6 +76,7 @@ public class PostService {
             map.put("content", post.getContent());
             map.put("author", post.getAuthor().getUsername());
             map.put("createdAt", post.getCreatedAt());
+            map.put("likesCount", post.getLikesCount());
             if (post.getVideoOrImageUrl() != null) {
                 map.put("fileUrl", "/uploads/" + post.getVideoOrImageUrl());
             } else {

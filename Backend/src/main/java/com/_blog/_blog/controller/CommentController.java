@@ -23,13 +23,13 @@ public class CommentController {
     private CommentService commentService;
 
     // create a comment
-    @PostMapping("/comment")
+    @PostMapping("/comments")
     public ResponseEntity<?> createComment(@RequestBody CommentRequest commentRequest) {
         return commentService.createComment(commentRequest);
     }
 
     // get comments 
-    @GetMapping("/comment")
+    @GetMapping("/comments")
     public ResponseEntity<?> getCommentsByPost(
         @RequestParam("postId") Long postId,
         @RequestParam(defaultValue="0") int page,
@@ -38,7 +38,7 @@ public class CommentController {
     }
 
     // delete comment
-    @DeleteMapping("/comment/{id}")
+    @DeleteMapping("/comments/{id}")
     public ResponseEntity<?> deleteComment(@PathVariable Long id) {
         return commentService.deleteComment(id);
     }
