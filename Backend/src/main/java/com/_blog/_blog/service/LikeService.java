@@ -50,15 +50,15 @@ public class LikeService {
             likeRepository.delete(existingLike.get());
             post.decrementLikes();
             postRepository.save(post);
-            return ResponseEntity.ok("Like removed");
         } else {
             // User has not liked yet -> add like
             Like like = new Like(user, post, true);
             likeRepository.save(like);
             post.incrementLikes();
             postRepository.save(post);
-            return ResponseEntity.ok("Like added");
         }
+
+        return ResponseEntity.ok().body(post.getLikesCount());
     }
 
     // Toggle like for comment
@@ -74,14 +74,13 @@ public class LikeService {
             likeRepository.delete(existingLike.get());
             comment.decrementLikes();
             commentRepository.save(comment);
-            return ResponseEntity.ok("Like removed");
         } else {
             // User has not liked yet -> add like
             Like like = new Like(user, comment, true);
             likeRepository.save(like);
             comment.incrementLikes();
             commentRepository.save(comment);
-            return ResponseEntity.ok("Like added");
         }
+        return ResponseEntity.ok().body(comment.getLikesCount());
     }
 }

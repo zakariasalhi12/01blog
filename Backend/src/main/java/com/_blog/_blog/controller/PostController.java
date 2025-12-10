@@ -68,7 +68,7 @@ public class PostController {
      * If the user hasn't liked it before, it adds a like.
      * If the user already liked it, it removes the like.
      */
-    @PostMapping("/post/{postId}/like")
+    @PostMapping("/posts/{postId}/like")
     public ResponseEntity<?> togglePostLike(@PathVariable Long postId) {
         return likeService.togglePostLike(postId);
     }
