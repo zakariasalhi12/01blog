@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Post } from '../../models/post.model';
@@ -14,7 +14,7 @@ import { LikesService } from '../../services/likes.service';
 export class PostCard {
 
 
-  constructor(private likesService : LikesService) { }
+  constructor(private likesService : LikesService ,private cdr: ChangeDetectorRef) { }
 
   public timeAgo(date: string | Date): string {
     const now = new Date();
@@ -51,6 +51,8 @@ export class PostCard {
     this.likesService.likePost(postId).subscribe({
       next: (res) => {
         this.post.likesCount = res;
+        this.post.likedByCurrentUser= !this.post.likedByCurrentUser;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Error liking post', err);
