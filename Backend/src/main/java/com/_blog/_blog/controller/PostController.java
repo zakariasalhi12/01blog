@@ -63,7 +63,7 @@ public class PostController {
         return postService.deletePost(id);
     }
 
-        /**
+    /**
      * Toggle like for a post.
      * If the user hasn't liked it before, it adds a like.
      * If the user already liked it, it removes the like.

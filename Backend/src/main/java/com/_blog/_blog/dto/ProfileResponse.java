@@ -7,6 +7,13 @@ public class ProfileResponse {
     private String avatarUrl;
     private String createdAt;
 
+
+    public ProfileResponse(String username, String avatarUrl, String createdAt) {
+        this.username = username;
+        this.avatarUrl = avatarUrl;
+        this.createdAt = createdAt;
+    }
+
     public String getUsername() {
         return username;
     }
