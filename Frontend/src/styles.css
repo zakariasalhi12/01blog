@@ -22,4 +22,35 @@
     --white-smoke: #fafafa;
 }
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 150px 0px 0 0 ; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.helper-container {
+    position: relative;
+}
+
+.helper {
+    padding: 3px 0;
+    box-shadow: 1px 1px 20px 20px var(--default-box-shadow-color);
+    border-radius: 15px;
+    position: absolute;
+    top: 50px;
+    z-index: 99;
+    background-color: white;
+}
+
+.helper div {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    gap: 0 10px;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+    min-width: 170px;
+}
+
+.helper div:hover {
+    background-color: #e9e9e9;
+    transition: all 0.5s linear;  
+}

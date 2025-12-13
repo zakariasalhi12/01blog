@@ -5,11 +5,12 @@ import { BackedURL } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { PostCard } from '../../components/post-card/post-card';
 import { CreatePost } from '../../components/create-post/create-post';
+import { MainHeader } from '../../components/main-header/main-header';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, PostCard , CreatePost],
+  imports: [CommonModule, PostCard , CreatePost , MainHeader],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })

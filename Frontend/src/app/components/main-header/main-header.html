@@ -1,0 +1,16 @@
+<header>
+    <h1 routerLink="/login">01Blog</h1>
+    <div class="helper-container">
+        <img (click)="togglePopup()" [src]="avatar()">
+        <div *ngIf="profile_popup() == true" class="helper">
+            <div routerLink="/profile/me">
+                <mat-icon fontSet="material-icons-outlined">account_circle</mat-icon>
+                <p>Profile</p>
+            </div>
+            <div (click)="onLogout()">
+                <mat-icon fontSet="material-icons-outlined">logout</mat-icon>
+                <p>Logout</p>
+            </div>
+        </div>
+    </div>
+</header>

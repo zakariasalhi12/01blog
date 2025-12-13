@@ -1,24 +1,29 @@
-Current Task : Create the Database model and relations
+Tasks :
+    Frontend:
+        Profile UI:
+            User Profile (avatar ,name , subscribe number , Subscribed number , posts)
+        Post UI:
+            (Full post , comments, likes)
+        Responsive Header:
+            Logo
+            Profile
+            AdminPanel (if admin)
+        Section for top users by subscriptions:
+            Top 10 Users
+    Backend:
+        Report api :
+            (posts & profiles)
+        Admin api :
+            Change users role
+            hide or remove posts
+            show reports
+        Notifications :
+            Subscribed users receive notifications when new posts are published
 
-Current Task :
-    implementation of this routes:
-        todo : /api/user/{id}
-        todo : /api/user/{id}/subscribes
-        todo : /api/user/{id}/posts {posts , comments , likes } 15 for every page
 
-Next Task : Post Creating feature 
-
-Todo : Users 
-    Note : Subscribed users receive notifications when new posts are published
-        Todo : subscribe between users
-
-Todo : Post Creating :
-    Note : Each post includes a timestamp, description, and media preview
-        Todo - add image and video integration and text to the post 
-        Todo - Likes and Dislike
-        Todo - delete and update
-        Todo - Add comments Section
-            Todo - delete and update feature
-            Todo - Likes and Dislike
-
-    
+    Final Touch:
+        Responsive Design
+        Validation
+        Readme File include installation and features
+        Clean code and structure
+        Error Handling

@@ -46,6 +46,7 @@ public class LoggedService {
             {
                 put("username", username);
                 put("role", role);
+                put("avatar", userRepository.findByUsername(username).get().getAvatar());
             }
         }
         );

@@ -4,7 +4,7 @@ header {
     color: var(--font-color);
     background-color: var(--white-smoke);
     box-shadow: 1px 1px 20px 20px var(--default-box-shadow-color) ;
-    padding: 20px;
+    padding: 15px;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -23,4 +23,14 @@ header h1 {
     letter-spacing: 2px;
     cursor: pointer;
     user-select: none;
+}
+header img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+header img:hover {
+    transform: scale(1.05);
+    transition: all 0.3s linear;
 }
