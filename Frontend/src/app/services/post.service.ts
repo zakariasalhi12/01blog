@@ -16,6 +16,10 @@ export class PostService {
     return this.http.get<PostsResponse>(`${APIUrl}/posts?page=${page}&size=${size}`);
   }
 
+  getSinglePost(id : number = 0): Observable<Post> {
+    return this.http.get<Post>(`${APIUrl}/posts?id=${id}`)
+  }
+
   createPost(title: string, content: string, file?: File): Observable<any> {
     const formData = new FormData();
     formData.append('title', title);

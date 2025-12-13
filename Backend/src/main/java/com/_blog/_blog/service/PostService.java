@@ -73,20 +73,21 @@ public class PostService {
     }
 
     // ---------------- Get Posts with Pagination ----------------
-    public ResponseEntity<?> getPosts(int page, int size) {
-
-
+    public ResponseEntity<?> getPosts(long id, int page, int size) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByUsername(username).orElse(null);
         if (currentUser == null) {
             return ResponseEntity.status(401).body("Unauthorized");
         }
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Post> postsPage = postRepository.findAll(pageable);
+        // If id is provided, return the single post
+        if (id != 0) {
+            Optional<Post> postOpt = postRepository.findById(id);
+            if (postOpt.isEmpty()) {
+                return ResponseEntity.status(404).body("Post not found");
+            }
+            Post post = postOpt.get();
 
-        
-        List<Map<String, Object>> postsList = postsPage.getContent().stream().map(post -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", post.getId());
             map.put("title", post.getTitle());
@@ -95,13 +96,9 @@ public class PostService {
             map.put("createdAt", post.getCreatedAt());
             map.put("likesCount", post.getLikesCount());
             map.put("avatar", post.getAuthor().getAvatar());
-            
+
             Optional<Like> liked = likeRepository.findByUserAndPost(currentUser, post);
-            if (liked.isPresent()) {
-                map.put("likedByCurrentUser", true);
-            } else {
-                map.put("likedByCurrentUser", false);
-            }
+            map.put("likedByCurrentUser", liked.isPresent());
 
             // File URL & media type
             if (post.getVideoOrImageUrl() != null) {
@@ -109,7 +106,7 @@ public class PostService {
                 map.put("fileUrl", fileUrl);
 
                 String lower = post.getVideoOrImageUrl().toLowerCase();
-                String mediaType = null;
+                String mediaType;
                 if (lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".ogg")) {
                     mediaType = "video";
                 } else if (lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".gif") || lower.endsWith(".webp")) {
@@ -126,6 +123,52 @@ public class PostService {
             // Comment count
             long commentCount = commentRepository.countByPostId(post.getId());
             map.put("commentsCount", commentCount);
+            map.put("owner" , username.equals(post.getAuthor().getUsername()));
+
+            return ResponseEntity.ok(map);
+        }
+
+        // Otherwise return paginated list of posts
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Post> postsPage = postRepository.findAll(pageable);
+
+        List<Map<String, Object>> postsList = postsPage.getContent().stream().map(post -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", post.getId());
+            map.put("title", post.getTitle());
+            map.put("content", post.getContent());
+            map.put("author", post.getAuthor().getUsername());
+            map.put("createdAt", post.getCreatedAt());
+            map.put("likesCount", post.getLikesCount());
+            map.put("avatar", post.getAuthor().getAvatar());
+
+            Optional<Like> liked = likeRepository.findByUserAndPost(currentUser, post);
+            map.put("likedByCurrentUser", liked.isPresent());
+
+            // File URL & media type
+            if (post.getVideoOrImageUrl() != null) {
+                String fileUrl = "/uploads/" + post.getVideoOrImageUrl();
+                map.put("fileUrl", fileUrl);
+
+                String lower = post.getVideoOrImageUrl().toLowerCase();
+                String mediaType;
+                if (lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".ogg")) {
+                    mediaType = "video";
+                } else if (lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".gif") || lower.endsWith(".webp")) {
+                    mediaType = "image";
+                } else {
+                    mediaType = "unknown";
+                }
+                map.put("mediaType", mediaType);
+            } else {
+                map.put("fileUrl", null);
+                map.put("mediaType", null);
+            }
+
+            long commentCount = commentRepository.countByPostId(post.getId());
+            map.put("commentsCount", commentCount);
+            map.put("owner" , username.equals(post.getAuthor().getUsername()));
+    
 
             return map;
         }).toList();

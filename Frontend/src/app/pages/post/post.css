@@ -1,0 +1,149 @@
+.post {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-container {
+    border: 1px solid #cfcfcf;
+    border-radius: 20px;
+    width: 80%;
+    height: fit-content;
+    padding: 10px;
+    background-color: white;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #e4e4e4;
+}
+
+.post-header .profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.post-header img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.post-content {
+    padding: 10px;
+    max-width: 100%;
+    background-color: white;
+}
+
+.post-content h1 {
+    margin: 20px;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.post-content img {
+    max-width: 90%;
+    display: block;
+    border-radius: 50px;
+    margin: 10px auto;
+}
+
+.post-footer {
+    padding: 10px;
+}
+.post-footer div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 20px;
+    width: fit-content;
+    border-radius: 20px;
+    border: 1px solid #222;
+    cursor: pointer;
+}
+
+
+.post-footer .active {
+    color: #1976d2;
+    border: 1px solid #1976d2;
+}
+
+.post-footer .active mat-icon {
+    color: #1976d2;
+}
+
+.title {
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 50px;
+    text-align: center;
+    margin: 20px;
+}
+
+
+/* Container for all comments */
+.comments {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Individual comment container */
+.comments-container {
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  width: 80%;
+}
+
+/* Comment header: avatar + name + time */
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.comment-header div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comment-header img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.comment-header h1 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+.comment-header p {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+/* Comment content */
+.comment-content h1 {
+  font-size: 14px;
+  margin: 0;
+  color: #555;
+  line-height: 1.4;
+}

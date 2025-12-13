@@ -10,6 +10,7 @@ export interface Post {
   avatar: string;
   mediaType?: 'image' | 'video' | 'unknown';
   likedByCurrentUser: boolean;
+  owner :boolean,
 }
 
 export interface PostsResponse {

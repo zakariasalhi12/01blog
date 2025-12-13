@@ -4,9 +4,10 @@ import { CommonModule } from '@angular/common';
 import { Post } from '../../models/post.model';
 import { BackedURL } from '../../../environments/environment';
 import { LikesService } from '../../services/likes.service';
+import { RouterLink } from "@angular/router";
 @Component({
   selector: 'app-post-card',
-  imports: [MatIcon, CommonModule],
+  imports: [MatIcon, CommonModule, RouterLink],
   standalone: true,
   templateUrl: './post-card.html',
   styleUrl: './post-card.css',

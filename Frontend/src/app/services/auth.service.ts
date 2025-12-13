@@ -1,12 +1,15 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { APIUrl } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
+  private platform_id = inject(PLATFORM_ID);
 
   constructor(private http: HttpClient) { }
 
@@ -26,13 +29,14 @@ export class AuthService {
   }
 
   logged(): Observable<any> {
+    if (!isPlatformBrowser(this.platform_id)) {
+      return of(null)
+    }
     const token = localStorage.getItem('token') || '';
     return this.http.get(`${APIUrl}/auth/logged`, {
       headers: { Authorization: `Bearer ${token}` }
     });
   }
-
-
 
   // Store token
   saveToken(token: string) {

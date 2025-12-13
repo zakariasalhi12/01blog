@@ -36,9 +36,10 @@ public class PostController {
     @GetMapping("/posts")
     public ResponseEntity<?> getPosts(
             @RequestParam(defaultValue = "0") int page, // page number, 0-indexed
-            @RequestParam(defaultValue = "20") int size // page size
+            @RequestParam(defaultValue = "20") int size, // page size
+            @RequestParam(value= "id" , required=false , defaultValue="0") long id
     ) {
-        return postService.getPosts(page, size);
+        return postService.getPosts(id , page, size);
     }
 
     // GET posts by logged-in user

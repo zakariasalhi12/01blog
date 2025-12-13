@@ -4,9 +4,9 @@ Tasks :
             User Profile (avatar ,name , subscribe number , Subscribed number , posts)
         Post UI:
             (Full post , comments, likes)
-        Responsive Header:
-            Logo
-            Profile
+        - Responsive Header:
+            Logo : done
+            Profile : done
             AdminPanel (if admin)
         Section for top users by subscriptions:
             Top 10 Users
