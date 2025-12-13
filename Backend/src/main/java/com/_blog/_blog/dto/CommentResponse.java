@@ -10,14 +10,18 @@ public class CommentResponse {
     private long likes;
     private Long userId;
     private String username;
+    private String avatar;
+    private boolean owner;
 
-    public CommentResponse(Long commentId, String content, LocalDateTime createdAt, Long userId, String username ,long likes) {
+    public CommentResponse(Long commentId, String content, LocalDateTime createdAt, Long userId, String username ,long likes , String avatar , boolean owner) {
         this.commentId = commentId;
         this.content = content;
         this.createdAt = createdAt;
         this.userId = userId;
         this.username = username;
         this.likes = likes;
+        this.avatar =avatar;
+        this.owner = owner;
     }
 
     // Getters
@@ -27,4 +31,6 @@ public class CommentResponse {
     public Long getUserId() { return userId; }
     public String getUsername() { return username; }
     public long getLikes() { return likes; }
+    public String getAvatar() {return avatar;}
+    public boolean getOwner() {return owner;}
 }

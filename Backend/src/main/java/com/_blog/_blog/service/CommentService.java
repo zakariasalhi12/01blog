@@ -60,6 +60,15 @@ public class CommentService {
 
     // Get paginated comments for a post, newest first
     public ResponseEntity<?> getCommentsByPost(Long postId, int page, int size) {
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+        User user = optionalUser.get();
+
+
         Optional<Post> optionalPost = postRepository.findById(postId);
         if (!optionalPost.isPresent()) {
             return ResponseEntity.status(404).body("Post not found");
@@ -77,7 +86,9 @@ public class CommentService {
                 c.getCreatedAt(),
                 c.getUser().getId(),
                 c.getUser().getUsername(),
-                c.getLikesCount()
+                c.getLikesCount(),
+                c.getUser().getAvatar(),
+                c.getUser().getUsername().equals(user.getUsername())
         ))
                 .collect(Collectors.toList());
 
