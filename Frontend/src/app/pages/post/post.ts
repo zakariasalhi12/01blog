@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PostService } from '../../services/post.service';
 import { LikesService } from '../../services/likes.service';
 import { CommentService } from '../../services/comment.service';
@@ -11,7 +11,7 @@ import { BackedURL } from '../../../environments/environment';
 
 @Component({
   selector: 'app-post',
-  imports: [MainHeader, CommonModule, MatIcon, FormsModule],
+  imports: [MainHeader, CommonModule, MatIcon, FormsModule , RouterLink],
   templateUrl: './post.html',
   styleUrls: ['./post.css'],
 })

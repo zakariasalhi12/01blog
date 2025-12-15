@@ -10,7 +10,7 @@
     <div class="post-container">
 
         <div class="post-header">
-            <div class="profile">
+            <div class="profile" , [routerLink]="['/profile' , post().authorId]" >
                 <img [src]="getFullFileUrl(post().avatar)" alt="profile">
                 <p>{{ post().author }}</p>
             </div>

@@ -2,17 +2,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined&display=swap" rel="stylesheet">
 </head>
 
-<div class="post">
+<div class="post" >
 
-    <div class="post-header" [routerLink]="['/post', post.id]">
-        <div>
+    <div class="post-header">
+        <div [routerLink]="['/profile', post.authorId]">
             <img [src]="getFullFileUrl(post.avatar)" alt="avatar">
             <span>{{ post.author }}</span>
         </div>
         <span class="date">{{ timeAgo(post.createdAt) }}</span>
     </div>
 
-    <div class="post-content">
+    <div class="post-content" [routerLink]="['/post', post.id]">
         <h1>{{ post.title }}</h1>
         <p>{{ post.content }}</p>
 

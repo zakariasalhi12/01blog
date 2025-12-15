@@ -5,13 +5,14 @@ import {Register} from './pages/register/register'
 import { Home } from './pages/home/home';
 import { authGuard } from './guards/auth-guard';
 import { Post } from './pages/post/post';
+import { Profile } from './pages/profile/profile';
 
 export const routes: Routes = [
     // {path: "admin", component: Home , canActivate:[authGuard]},
     {path: "login" , component: Login , canActivate:[authGuard]},
     {path: "register" , component: Register , canActivate:[authGuard]},
     {path: "profile/me", component: Home , canActivate:[authGuard]},
-    // {path: "profile/:id", component: Home , canActivate:[authGuard]},
+    {path: "profile/:id", component: Profile , canActivate:[authGuard]},
     {path: "post/:id", component: Post, canActivate:[authGuard]},
     {path: "", component: Home , canActivate:[authGuard]},
 ];

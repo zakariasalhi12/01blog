@@ -11,6 +11,7 @@ export interface Post {
   mediaType?: 'image' | 'video' | 'unknown';
   likedByCurrentUser: boolean;
   owner :boolean;
+  authorId : Number;
 }
 
 export interface PostsResponse {
