@@ -7,6 +7,7 @@ import { PostCard } from '../../components/post-card/post-card';
 
 @Component({
   selector: 'app-profile',
+  standalone : true,
   imports: [MainHeader , RouterLink , CommonModule , MatIcon , PostCard],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
