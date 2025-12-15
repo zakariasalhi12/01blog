@@ -96,7 +96,7 @@ public class PostService {
             map.put("createdAt", post.getCreatedAt());
             map.put("likesCount", post.getLikesCount());
             map.put("avatar", post.getAuthor().getAvatar());
-
+            map.put("authorId" , post.getAuthor().getId());
             Optional<Like> liked = likeRepository.findByUserAndPost(currentUser, post);
             map.put("likedByCurrentUser", liked.isPresent());
 
@@ -141,7 +141,7 @@ public class PostService {
             map.put("createdAt", post.getCreatedAt());
             map.put("likesCount", post.getLikesCount());
             map.put("avatar", post.getAuthor().getAvatar());
-
+            map.put("authorId" , post.getAuthor().getId());
             Optional<Like> liked = likeRepository.findByUserAndPost(currentUser, post);
             map.put("likedByCurrentUser", liked.isPresent());
 
