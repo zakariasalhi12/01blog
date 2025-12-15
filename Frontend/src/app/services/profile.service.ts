@@ -16,16 +16,11 @@ export class ProfileService {
       return this.http.get<Profile>(`${APIUrl}/profile/${Id}`, {});
     }
 
-    // my_profile(postId: number): Observable<Profile> {
-      // return this.http.post(`${APIUrl}/posts/${postId}/like`, {});
-    // }
-
-    // subscribe(postId: number): Observable<any> {
-      // return this.http.post(`${APIUrl}/posts/${postId}/like`, {});
-    // }
-  
-    check(commentId: number): Observable<any> {
-      return this.http.post(`${APIUrl}/comments/${commentId}/like`, {});
+    checksub(Id: number): Observable<boolean> {
+      return this.http.get<boolean>(`${APIUrl}/profile/subscribe/check?id=${Id}`, {});
     }
 
+    sub(Id: number): Observable<any> {
+      return this.http.get<any>(`${APIUrl}/profile/subscribe?id=${Id}`, {});
+    }
 }

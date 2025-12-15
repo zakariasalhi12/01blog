@@ -6,6 +6,8 @@ import { MatIcon } from '@angular/material/icon';
 import { PostCard } from '../../components/post-card/post-card';
 import { ProfileService } from '../../services/profile.service';
 import { BackedURL } from '../../../environments/environment';
+import { timeAgo } from '../../lib/timeAgo.helper';
+import { getFullFileUrl } from '../../lib/getFullFileUrl.helper';
 
 @Component({
   selector: 'app-profile',
@@ -16,6 +18,11 @@ import { BackedURL } from '../../../environments/environment';
 export class Profile implements OnInit {
   profileId = 0;
   profile = signal<any>(null);
+  sub = signal(false);
+
+  timeAgo = timeAgo;
+  getFullFileUrl = getFullFileUrl;
+
   constructor(
     private route: ActivatedRoute,
     private profileService: ProfileService,
@@ -35,36 +42,26 @@ export class Profile implements OnInit {
       // load profile
       this.profileService.profile(this.profileId).subscribe({
         next: (res) => this.profile.set(res),
-        error: (err) => console.error('Failed to fetch post', err)
+        // error: (err) => console.error('Failed to fetch post', err)
       })
+
+      this.checksub();
 
     });
   }
 
+  checksub(): void {
+      this.profileService.checksub(this.profileId).subscribe({
+        next: (res) => this.sub.set(res),
+      // error: (err) => console.error('Failed to fetch sub checker', err)
+    }) 
+  }
 
-    getFullFileUrl(fileUrl: string | undefined): string | undefined {
-      if (!fileUrl) return undefined;
-      return `${BackedURL}${fileUrl}`;
-    }
-  
-    timeAgo(date: string | Date): string {
-      const now = new Date();
-      const past = new Date(date);
-      const seconds = Math.floor((now.getTime() - past.getTime()) / 1000);
-      const intervals: any = {
-        year: 31536000,
-        month: 2592000,
-        week: 604800,
-        day: 86400,
-        hour: 3600,
-        minute: 60,
-        second: 1
-      };
-      for (const key in intervals) {
-        const value = Math.floor(seconds / intervals[key]);
-        if (value > 0) return value === 1 ? `1 ${key} ago` : `${value} ${key}s ago`;
-      }
-      return 'just now';
-    }
+  subscribe() : void {
+    this.profileService.sub(this.profileId).subscribe({
+      next: (res) => this.checksub(),
+      // error: (err) => console.error('Failed to fetch sub checker', err)
+    })
+  }
 
 }

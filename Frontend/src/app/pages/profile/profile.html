@@ -11,7 +11,9 @@
                     <h3>{{ timeAgo(profile().createdAt) }}</h3>
                 </div>
             </div>
-            <button>Subscribe</button>
+
+            <button (click)="subscribe()" *ngIf="!sub()">Subscribe</button>
+            <button (click)="subscribe()" *ngIf="sub()">Unsubscribe</button>
         </div>
         
         <div class="body">

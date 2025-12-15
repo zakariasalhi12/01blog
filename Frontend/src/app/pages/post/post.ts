@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { MainHeader } from '../../components/main-header/main-header';
 import { MatIcon } from '@angular/material/icon';
 import { BackedURL } from '../../../environments/environment';
+import { timeAgo } from '../../lib/timeAgo.helper';
+import { getFullFileUrl } from '../../lib/getFullFileUrl.helper';
 
 @Component({
   selector: 'app-post',
@@ -25,6 +27,9 @@ page = 0;                      // current page index
 size = 10;                     // number of comments per request
 loadingComments = false;       // loading state
 allCommentsLoaded = false;     // flag when no more comments
+
+timeAgo = timeAgo;
+getFullFileUrl = getFullFileUrl;
 
 constructor(
   private likesService: LikesService,
@@ -105,28 +110,4 @@ this.commentService.getComment(this.postId, this.size, this.page).subscribe({
     });
   }
 
-  getFullFileUrl(fileUrl: string | undefined): string | undefined {
-    if (!fileUrl) return undefined;
-    return `${BackedURL}${fileUrl}`;
-  }
-
-  timeAgo(date: string | Date): string {
-    const now = new Date();
-    const past = new Date(date);
-    const seconds = Math.floor((now.getTime() - past.getTime()) / 1000);
-    const intervals: any = {
-      year: 31536000,
-      month: 2592000,
-      week: 604800,
-      day: 86400,
-      hour: 3600,
-      minute: 60,
-      second: 1
-    };
-    for (const key in intervals) {
-      const value = Math.floor(seconds / intervals[key]);
-      if (value > 0) return value === 1 ? `1 ${key} ago` : `${value} ${key}s ago`;
-    }
-    return 'just now';
-  }
 }
