@@ -5,10 +5,10 @@
 
         <div class="header">
             <div class="image-header">
-                <img src="https://i.pinimg.com/originals/06/10/7e/06107eaff63aaca0e44e6592e222d287.jpg" alt="">
+                <img [src]="getFullFileUrl(profile().avatarUrl)" alt="">
                 <div>
-                    <p>genechiro sama</p>
-                    <h3>10-10-2025</h3>
+                    <p>{{ profile().username }}</p>
+                    <h3>{{ timeAgo(profile().createdAt) }}</h3>
                 </div>
             </div>
             <button>Subscribe</button>
@@ -17,11 +17,11 @@
         <div class="body">
             <div class="sub">
                 <p>Subscribers</p>
-                <h3>1000</h3>
+                <h3>{{ profile().subscribers}}</h3>
             </div>
             <div class="sub">
                 <p>Subscriptions</p>
-                <h3>1000</h3>
+                <h3>{{ profile().subscriptions }}</h3>
             </div>
             <div></div>
         </div>

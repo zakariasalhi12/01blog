@@ -34,16 +34,23 @@ constructor(
 ) {}
 
 ngOnInit(): void {
-  this.postId = Number(this.route.snapshot.paramMap.get('id'));
+  this.route.paramMap.subscribe(params => {
+    const id = params.get('id');
 
-  // load post
-  this.postService.getSinglePost(this.postId).subscribe({
-    next: (res) => this.post.set(res),
-    error: (err) => console.error('Failed to fetch post', err)
+    if (!id) {
+      console.error('Post ID missing in route');
+      return;
+    }
+
+    this.postId = Number(id);
+
+    this.postService.getSinglePost(this.postId).subscribe({
+      next: (res) => this.post.set(res),
+      error: (err) => console.error('Failed to fetch post', err)
+    });
+
+    this.loadComments();
   });
-
-  // load first page of comments
-  this.loadComments();
 }
 
 // Lazy load comments until finished
