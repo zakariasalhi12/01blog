@@ -28,8 +28,6 @@ public class SubscribeService {
     public ResponseEntity<Map<String, String>> subscribe(Long subscribedToId) {
 
         Map<String, String> res = new HashMap<>();
-        System.out.println("Subscribed to ID: " + subscribedToId);
-        // Get logged user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> subscriberOpt = userRepository.findByUsername(username);
 
@@ -79,5 +77,33 @@ public class SubscribeService {
         res.put("subscribedToId", target.getId().toString());
 
         return ResponseEntity.ok(res);
+    }
+
+    public ResponseEntity<String> check(Long subscribedToId) {
+
+        String username = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        Optional<User> subscriberOpt = userRepository.findByUsername(username);
+
+        if (subscriberOpt.isEmpty()) {
+            return ResponseEntity.status(401).body("false");
+        }
+
+        User subscriber = subscriberOpt.get();
+
+        if (subscriber.getId().equals(subscribedToId)) {
+            return ResponseEntity.status(400).body("false");
+        }
+
+        boolean isSubscribed = !subscriptionsRepository
+                .findBySubscriberId_IdAndSubscribedToId_Id(
+                        subscriber.getId(),
+                        subscribedToId
+                ).isEmpty();
+
+        return ResponseEntity.ok(String.valueOf(isSubscribed));
     }
 }

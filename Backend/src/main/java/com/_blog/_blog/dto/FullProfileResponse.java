@@ -8,14 +8,27 @@ public class FullProfileResponse {
     private String email;
     private int age;
     private String role; 
+    private long subscribers;
+    private long subscriptions;
 
-    public FullProfileResponse(String username, String avatarUrl, String createdAt, String email ,int age , String role) {
+    public FullProfileResponse(String username, String avatarUrl, String createdAt, String email ,int age , String role , long subscribers , long subscriptions) {
         this.username = username;
         this.avatarUrl = avatarUrl;
         this.createdAt = createdAt;
         this.email = email;
         this.age = age;
         this.role = role;
+        this.subscriptions = subscriptions;
+        this.subscribers = subscribers;
+
+    }
+
+    public long getSubscribers() {
+        return subscribers;
+    }
+
+    public long getSubscriptions() {
+        return subscriptions;
     }
 
     public int getAge() {

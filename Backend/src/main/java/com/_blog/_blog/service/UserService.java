@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com._blog._blog.dto.FullProfileResponse;
 import com._blog._blog.dto.ProfileResponse;
 import com._blog._blog.models.User;
+import com._blog._blog.repository.SubscriptionsRepository;
 import com._blog._blog.repository.UserRepository;
 
 @Service
@@ -23,6 +24,9 @@ public class UserService {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private SubscriptionsRepository subscriptionsRepository;
 
     public User createUser(String username, String email, String password, String avatar, int age) {
         User user = new User(username, email, password, age);
@@ -39,21 +43,40 @@ public class UserService {
         }
 
         User currentUser = loggedUserOpt.get();
+
+
+
         if (Objects.equals(currentUser.getId(), id)) {
+
+            long followingCount = subscriptionsRepository.findAllBySubscriberId_Id(currentUser.getId()).size();
+            long followersCount = subscriptionsRepository.findAllBySubscribedToId_Id(currentUser.getId()).size();
+
             FullProfileResponse profile = new FullProfileResponse(
                 currentUser.getUsername(),
                 currentUser.getAvatar(),
                 currentUser.getCreatedAt().toString(),
                 currentUser.getEmail(),
                 currentUser.getAge(),
-                currentUser.getRole().toString()
+                currentUser.getRole().toString(),
+                followersCount,
+                followingCount
             );
             return ResponseEntity.ok(profile);
         }
 
         User user = userRepository.findById(id).orElse(null);
         if (user != null) {
-            ProfileResponse profileResponse = new ProfileResponse(user.getUsername(), user.getAvatar() ,user.getCreatedAt().toString());
+
+            long followingCount = subscriptionsRepository.findAllBySubscriberId_Id(currentUser.getId()).size();
+            long followersCount = subscriptionsRepository.findAllBySubscribedToId_Id(currentUser.getId()).size();
+
+            ProfileResponse profileResponse = new ProfileResponse(
+                user.getUsername(),
+                user.getAvatar(),
+                user.getCreatedAt().toString(),
+                followersCount,
+                followingCount
+            );
             return ResponseEntity.ok(profileResponse);
         }
 

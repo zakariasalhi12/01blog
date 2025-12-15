@@ -45,6 +45,11 @@ public class ProfileController {
         return subscribeService.subscribe(subscribedToId);
     }
 
+    @GetMapping("/profile/subscribe/check")
+    public ResponseEntity<?> check(@RequestParam("id") Long subscribedToId) {
+        return subscribeService.check(subscribedToId);
+    }
+
     @GetMapping("/profile/me")
     public ResponseEntity<?> getMyProfile() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
