@@ -13,5 +13,5 @@ import com._blog._blog.models.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByAuthorUsername(String username, Pageable pageable);
-    Optional<Post> findById(Long id , Pageable page);
+    Optional<Post> findById(Long id);
 }

@@ -182,7 +182,7 @@ public class PostService {
     }
 
     // ---------------- Get Logged-in User's Posts ----------------
-    public ResponseEntity<?> getMyPosts(int page , int size) {
+    public ResponseEntity<?> getMyPosts(int page, int size) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByUsername(username).orElse(null);
         if (currentUser == null) {
@@ -190,7 +190,7 @@ public class PostService {
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Post> postsPage = postRepository.findAllByAuthorUsername(username , pageable);
+        Page<Post> postsPage = postRepository.findAllByAuthorUsername(username, pageable);
 
         List<Map<String, Object>> postsList = postsPage.getContent().stream().map(post -> {
             Map<String, Object> map = new HashMap<>();
@@ -241,15 +241,20 @@ public class PostService {
         return ResponseEntity.ok(response);
     }
 
-        public ResponseEntity<?> userPost(long id , int page , int size) {
+    public ResponseEntity<?> userPost(long id, int page, int size) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByUsername(username).orElse(null);
         if (currentUser == null) {
             return ResponseEntity.status(401).body("Unauthorized");
         }
 
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(404).body("user not found");
+        }
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Post> postsPage = postRepository.findAllByAuthorUsername(username , pageable);
+        Page<Post> postsPage = postRepository.findAllByAuthorUsername(user.getUsername(), pageable);
 
         List<Map<String, Object>> postsList = postsPage.getContent().stream().map(post -> {
             Map<String, Object> map = new HashMap<>();

@@ -79,7 +79,7 @@ export class Profile implements OnInit {
 
     this.loading = true;
 
-    this.postService.getmyPosts(this.page, this.size).subscribe({
+    this.postService.getbyAuthor(this.profileId ,this.page, this.size).subscribe({
       next: res => {
         this.posts = [...this.posts, ...res.posts];
 
