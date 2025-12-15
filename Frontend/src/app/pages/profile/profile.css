@@ -62,3 +62,20 @@ button {
 .sub h3 {
     font-weight: bold;
 }
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 50px;
+}
+
+.loading,
+.end {
+  text-align: center;
+  margin: 20px 0;
+  color: gray;
+}

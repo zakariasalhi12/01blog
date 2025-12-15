@@ -22,7 +22,10 @@ export class Home implements OnInit {
   loading = false;
   hasMore = true;
 
-  constructor(private postService: PostService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private postService: PostService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadPosts();

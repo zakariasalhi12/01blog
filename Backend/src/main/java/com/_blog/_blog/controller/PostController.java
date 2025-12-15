@@ -44,9 +44,13 @@ public class PostController {
 
     // GET posts by logged-in user
     @GetMapping("/posts/me")
-    public ResponseEntity<?> getMyPosts() {
-        return postService.getMyPosts();
+    public ResponseEntity<?> myPosts(
+            @RequestParam(defaultValue = "0") int page, // page number, 0-indexed
+            @RequestParam(defaultValue = "20") int size // page size
+    ) {
+        return postService.getMyPosts(page, size);
     }
+
 
     @PutMapping("/posts/{id}")
     public ResponseEntity<?> updatePost(

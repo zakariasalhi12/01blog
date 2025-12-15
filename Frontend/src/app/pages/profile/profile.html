@@ -29,3 +29,20 @@
         </div>
     </div>
 </section>
+
+
+<div class="container">
+  <app-post-card
+    *ngFor="let post of posts"
+    [post]="post">
+  </app-post-card>
+</div>
+
+
+<div class="loading" *ngIf="loading">
+  Loading posts...
+</div>
+
+<div class="end" *ngIf="!hasMore && !loading">
+  No more posts.
+</div>

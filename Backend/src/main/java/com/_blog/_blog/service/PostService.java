@@ -96,7 +96,7 @@ public class PostService {
             map.put("createdAt", post.getCreatedAt());
             map.put("likesCount", post.getLikesCount());
             map.put("avatar", post.getAuthor().getAvatar());
-            map.put("authorId" , post.getAuthor().getId());
+            map.put("authorId", post.getAuthor().getId());
             Optional<Like> liked = likeRepository.findByUserAndPost(currentUser, post);
             map.put("likedByCurrentUser", liked.isPresent());
 
@@ -123,7 +123,7 @@ public class PostService {
             // Comment count
             long commentCount = commentRepository.countByPostId(post.getId());
             map.put("commentsCount", commentCount);
-            map.put("owner" , username.equals(post.getAuthor().getUsername()));
+            map.put("owner", username.equals(post.getAuthor().getUsername()));
 
             return ResponseEntity.ok(map);
         }
@@ -141,7 +141,7 @@ public class PostService {
             map.put("createdAt", post.getCreatedAt());
             map.put("likesCount", post.getLikesCount());
             map.put("avatar", post.getAuthor().getAvatar());
-            map.put("authorId" , post.getAuthor().getId());
+            map.put("authorId", post.getAuthor().getId());
             Optional<Like> liked = likeRepository.findByUserAndPost(currentUser, post);
             map.put("likedByCurrentUser", liked.isPresent());
 
@@ -167,8 +167,7 @@ public class PostService {
 
             long commentCount = commentRepository.countByPostId(post.getId());
             map.put("commentsCount", commentCount);
-            map.put("owner" , username.equals(post.getAuthor().getUsername()));
-    
+            map.put("owner", username.equals(post.getAuthor().getUsername()));
 
             return map;
         }).toList();
@@ -183,10 +182,63 @@ public class PostService {
     }
 
     // ---------------- Get Logged-in User's Posts ----------------
-    public ResponseEntity<List<Post>> getMyPosts() {
+    public ResponseEntity<?> getMyPosts(int page , int size) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<Post> posts = postRepository.findAllByAuthorUsername(username);
-        return ResponseEntity.ok(posts);
+        User currentUser = userRepository.findByUsername(username).orElse(null);
+        if (currentUser == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Post> postsPage = postRepository.findAllByAuthorUsername(username , pageable);
+
+        List<Map<String, Object>> postsList = postsPage.getContent().stream().map(post -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", post.getId());
+            map.put("title", post.getTitle());
+            map.put("content", post.getContent());
+            map.put("author", post.getAuthor().getUsername());
+            map.put("createdAt", post.getCreatedAt());
+            map.put("likesCount", post.getLikesCount());
+            map.put("avatar", post.getAuthor().getAvatar());
+            map.put("authorId", post.getAuthor().getId());
+            Optional<Like> liked = likeRepository.findByUserAndPost(currentUser, post);
+            map.put("likedByCurrentUser", liked.isPresent());
+
+            // File URL & media type
+            if (post.getVideoOrImageUrl() != null) {
+                String fileUrl = "/uploads/" + post.getVideoOrImageUrl();
+                map.put("fileUrl", fileUrl);
+
+                String lower = post.getVideoOrImageUrl().toLowerCase();
+                String mediaType;
+                if (lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".ogg")) {
+                    mediaType = "video";
+                } else if (lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".gif") || lower.endsWith(".webp")) {
+                    mediaType = "image";
+                } else {
+                    mediaType = "unknown";
+                }
+                map.put("mediaType", mediaType);
+            } else {
+                map.put("fileUrl", null);
+                map.put("mediaType", null);
+            }
+
+            long commentCount = commentRepository.countByPostId(post.getId());
+            map.put("commentsCount", commentCount);
+            map.put("owner", username.equals(post.getAuthor().getUsername()));
+
+            return map;
+        }).toList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("posts", postsList);
+        response.put("currentPage", postsPage.getNumber());
+        response.put("totalPages", postsPage.getTotalPages());
+        response.put("totalPosts", postsPage.getTotalElements());
+
+        return ResponseEntity.ok(response);
     }
 
     // ---------------- Update Post ----------------
