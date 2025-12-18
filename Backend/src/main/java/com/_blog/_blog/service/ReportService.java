@@ -88,7 +88,24 @@ public class ReportService {
         return ResponseEntity.ok("good");
     }
 
-    public ResponseEntity<?> removeReport(long reportID) {
-        return ResponseEntity.ok("good");
+    public ResponseEntity<?> deleteReport(long reportID) {
+        String Username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByUsername(Username).orElse(null);
+        if (currentUser == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        if (!"ADMIN".equals(currentUser.getRole().toString())) {
+            return ResponseEntity.status(403).body("FORBIDDEN");
+        }
+ 
+        Report report = reportRepository.findById(reportID).orElse(null);
+        if (report == null) {
+            return ResponseEntity.status(404).body("invalid report id");
+        }
+
+        reportRepository.delete(report);
+
+        return ResponseEntity.ok("Report Deleted successfully");
     }
 }
