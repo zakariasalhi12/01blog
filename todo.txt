@@ -1,15 +1,8 @@
 Tasks :
     Frontend:
-        Profile UI:
-            User Profile (avatar ,name , subscribe number , Subscribed number , posts)
-        Post UI:
-            (Full post , comments, likes)
         - Responsive Header:
-            Logo : done
-            Profile : done
+            Notifications icon
             AdminPanel (if admin)
-        Section for top users by subscriptions:
-            Top 10 Users
     Backend:
         Report api :
             (posts & profiles)

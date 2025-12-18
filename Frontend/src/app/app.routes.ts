@@ -7,6 +7,7 @@ import { authGuard } from './guards/auth-guard';
 import { Post } from './pages/post/post';
 import { Profile } from './pages/profile/profile';
 import { MyProfile } from './pages/my-profile/my-profile';
+import { Notifications } from './pages/notifications/notifications';
 
 export const routes: Routes = [
     // {path: "admin", component: Home , canActivate:[authGuard]},
@@ -15,5 +16,6 @@ export const routes: Routes = [
     {path: "profile/me", component: MyProfile , canActivate:[authGuard]},
     {path: "profile/:id", component: Profile , canActivate:[authGuard]},
     {path: "post/:id", component: Post, canActivate:[authGuard]},
+    {path: "notifications" , component : Notifications , canActivate:[authGuard]},
     {path: "", component: Home , canActivate:[authGuard]},
 ];
