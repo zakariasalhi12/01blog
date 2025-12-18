@@ -20,12 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
+import com._blog._blog.dto.ReportRequest;
 import com._blog._blog.models.User;
 import com._blog._blog.repository.UserRepository;
 import com._blog._blog.service.SubscribeService;
 import com._blog._blog.service.UserService;
 
 import jakarta.websocket.server.PathParam;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com._blog._blog.service.ReportService;
 
 @RestController
 @RequestMapping("/api")
@@ -39,6 +45,9 @@ public class ProfileController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private  ReportService reportService;
 
     @GetMapping("/profile/subscribe")
     public ResponseEntity<?> subscribe(@RequestParam("id") Long subscribedToId) {
@@ -86,6 +95,14 @@ public class ProfileController {
         }
 
         return userService.updateUser(user.get().getId(), updateData, avatarFile);
+    }
+
+    @PostMapping("/profile/{reportedId}/report")
+    public ResponseEntity<?> reportProfile(
+            @PathVariable Long reportedId,
+            @RequestBody ReportRequest request
+    ) {
+        return reportService.reportUser(reportedId, request.getReason());
     }
 
 }

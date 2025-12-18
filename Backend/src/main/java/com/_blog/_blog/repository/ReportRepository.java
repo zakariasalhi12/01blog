@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 import com._blog._blog.models.Comment;
 import com._blog._blog.models.Like;
 import com._blog._blog.models.Post;
+import com._blog._blog.models.Report;
 import com._blog._blog.models.User;
 
 @Repository
-public interface LikeRepository extends JpaRepository<Like, Long> {
-    public Optional<Like> findByUserAndComment(User user, Comment comment);
-    public Optional<Like> findByUserAndPost(User user, Post post);
-
+public interface ReportRepository extends JpaRepository<Report, Long>{
+    boolean existsByUserIdAndPostId(Long userId, Long postId);
+    boolean existsByUserIdAndReportedId(Long userId, Long reportedId);
 }
