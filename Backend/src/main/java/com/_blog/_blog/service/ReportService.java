@@ -41,7 +41,7 @@ public class ReportService {
         }
 
         if (currentUser.getId().equals(post.get().getAuthor().getId())) {
-            return ResponseEntity.status(400).body("you cant report your own post");
+            return ResponseEntity.status(409).body("you cant report your own post");
         }
 
         boolean exist = reportRepository.existsByUserIdAndPostId(currentUser.getId(), postId);
@@ -75,7 +75,7 @@ public class ReportService {
         boolean exist = reportRepository.existsByUserIdAndReportedId(currentUser.getId(), userId);
 
         if (exist) {
-            return ResponseEntity.status(400).body("already reported");
+            return ResponseEntity.status(409).body("already reported");
         }
 
         Report report = new Report(currentUser , user.get() , reason);

@@ -12,7 +12,7 @@ import com._blog._blog.service.ReportService;
 
 @RestController
 @RequestMapping("/api/admin")
-public class Admin {
+public class AdminController {
     
     @Autowired
     ReportService reportService;

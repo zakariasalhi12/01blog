@@ -17,10 +17,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com._blog._blog.models.Like;
 import com._blog._blog.models.Post;
+import com._blog._blog.models.Subscriptions;
 import com._blog._blog.models.User;
 import com._blog._blog.repository.CommentRepository;
 import com._blog._blog.repository.LikeRepository;
 import com._blog._blog.repository.PostRepository;
+import com._blog._blog.repository.SubscriptionsRepository;
 import com._blog._blog.repository.UserRepository;
 
 @Service
@@ -40,6 +42,12 @@ public class PostService {
 
     @Autowired
     private LikeRepository likeRepository;
+
+    @Autowired
+    private SubscriptionsRepository subscriptionsRepository;
+
+    @Autowired 
+    NotificationService notificationService;
 
     // ---------------- Create Post ----------------
     public ResponseEntity<?> createPost(String title, String content, MultipartFile file) {
@@ -69,6 +77,15 @@ public class PostService {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Post created successfully");
         response.put("postId", post.getId());
+
+
+        List<Subscriptions> subscriptions = subscriptionsRepository.findAllBySubscribedToId_Id(author.getId());
+        subscriptions.forEach(sub -> {
+            User subscriber = sub.getSubscriber();
+            String message = author.getUsername() + " published a new post ";
+            notificationService.createNotification(subscriber.getId(), message);
+        });
+
         return ResponseEntity.ok(response);
     }
 

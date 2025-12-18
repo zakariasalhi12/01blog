@@ -20,3 +20,11 @@ Tasks :
         Readme File include installation and features
         Clean code and structure
         Error Handling
+        Check status code :
+            201 for created
+            409 conflict
+            403 forbidden
+            401 unauthorized
+            400 bad request
+            404 not found
+            204 no content

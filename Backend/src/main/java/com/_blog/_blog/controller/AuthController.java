@@ -23,7 +23,7 @@ import com._blog._blog.service.LogoutService;
 
 @RestController
 @RequestMapping("/api/auth")
-public class Auth {
+public class AuthController {
 
     @Autowired
     private LoginService loginService;
