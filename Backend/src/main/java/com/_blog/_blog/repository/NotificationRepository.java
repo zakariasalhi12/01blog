@@ -11,4 +11,5 @@ import org.springframework.data.domain.Pageable;
 public interface NotificationRepository extends JpaRepository<Notifications, Long>{
     Page<Notifications> findByUser(User user ,Pageable pageable);
     Page<Notifications> findByNotified(User user ,Pageable pageable);
+    boolean existsByNotifiedAndSeenFalse(User user);
 }

@@ -56,7 +56,7 @@ public class NotificationService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByUsername(username).orElse(null);
         if (currentUser == null) {
-            ResponseEntity.status(401).body("Unauthorized");
+            return ResponseEntity.status(401).body("Unauthorized");
         }
 
         // Pagination
@@ -108,5 +108,17 @@ public class NotificationService {
 
         notificationRepository.delete(notification);
         notificationRepository.save(notification);
+    }
+
+    public ResponseEntity<?> checkForNotification() {
+        // Get current user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByUsername(username).orElse(null);
+        if (currentUser == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        boolean exist = notificationRepository.existsByNotifiedAndSeenFalse(currentUser);
+        return ResponseEntity.status(200).body(exist);
     }
 }

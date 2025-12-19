@@ -24,5 +24,11 @@ public class NotifController {
     ) {
         return notificationService.getNotifications(page, size);
     }
+
+    @GetMapping("/notifications/check")
+    public ResponseEntity<?> checkForNotification() {
+        return notificationService.checkForNotification();
+    }
+    
     
 }
