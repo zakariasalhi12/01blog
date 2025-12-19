@@ -1,9 +1,9 @@
 <header>
     <h1 routerLink="/login">01Blog</h1>
     <div class="helper-container">
-        <div routerLink="/notifications" class="notif">
+        <div class="notif" (click)="toggleNotifications($event)">
             <mat-icon id="notif" fontSet="material-icons-outlined">notifications</mat-icon>
-            <div class="red-dot"></div>
+            <div *ngIf="needToSeen()" class="red-dot"></div>
         </div>
         <img (click)="togglePopup()" [src]="avatar()">
         <div *ngIf="profile_popup() == true" class="helper">
@@ -18,3 +18,32 @@
         </div>
     </div>
 </header>
+
+<section *ngIf="notifications_open()" class="notification-container">
+    <div (click)="$event.stopPropagation()" class="notifications" (scroll)="onScroll($event)">
+
+        <h1 class="title">Notifications</h1>
+
+        <div [routerLink]="['/profile', n.user.userId ]" class="notification" *ngFor="let n of notifications" [class.unseen]="!n.seen">
+            <div class="notification-header">
+                <div class="avatar">
+                    <img [src]="getFullFileUrl(n.user.avatar)" alt="avatar">
+                    <h1>{{ n.user.username }}</h1>
+                </div>
+
+                <p class="notification-time">
+                    {{ timeAgo(n.createdAt) }}
+                </p>
+            </div>
+
+            <p>{{ n.message }}</p>
+        </div>
+
+        <!-- Loader -->
+        <div class="loading" *ngIf="loading">
+            Loading...
+        </div>
+
+
+    </div>
+</section>

@@ -60,3 +60,150 @@ header img:hover {
     transform: scale(1.05);
     transition: all 0.3s linear;
 }
+
+.notification-container {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #38212163;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container */
+.notifications {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: min(900px, 95%);
+    min-height: 50vh;
+    max-height: 70vh;
+
+    padding: 16px;
+    gap: 14px;
+
+    background-color: #f7f7f7;
+    border-radius: 20px;
+
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Scrollbar */
+.notifications::-webkit-scrollbar {
+    width: 6px;
+}
+
+.notifications::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 10px;
+}
+
+.notifications::-webkit-scrollbar-thumb:hover {
+    background-color: #888;
+}
+
+/* Notification Card */
+.notification {
+    width: 100%;
+    max-width: 700px;
+
+    padding: 18px;
+    border-radius: 16px;
+
+    background-color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.notification:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.notification-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+/* Avatar Section */
+.avatar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar h1 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Optional timestamp or action */
+.notification-time {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* Content */
+.notification p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #444;
+    margin: 0;
+}
+
+/* 📱 Mobile Optimization */
+@media (max-width: 600px) {
+    .notifications {
+        padding: 12px;
+        max-height: 80vh;
+    }
+
+    .notification {
+        padding: 14px;
+    }
+
+    .avatar h1 {
+        font-size: 0.9rem;
+    }
+
+    .notification p {
+        font-size: 0.9rem;
+    }
+}
+
+
+.title {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.notification.unseen {
+  border-left: 4px solid #4f46e5;
+  background-color: #f5f7ff;
+}
+
+.loading,
+.end {
+  padding: 12px;
+  font-size: 0.9rem;
+  color: #777;
+}
