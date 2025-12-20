@@ -1,7 +1,9 @@
-FROM postgres:17
+FROM openjdk:22-jdk
 
-ENV POSTGRES_USER=01blog
-ENV POSTGRES_PASSWORD=01blog
-ENV POSTGRES_DB=01blog
+WORKDIR /app
 
-EXPOSE 5432
+COPY . .
+
+EXPOSE 8080
+
+ENTRYPOINT ["./mvnw", "spring-boot:run"]

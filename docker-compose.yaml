@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  database:
+    image: postgres:17
+    environment:
+      - POSTGRES_USER=01blog
+      - POSTGRES_PASSWORD=01blog
+      - POSTGRES_DB=01blog
+    ports:
+      - 5432:5432
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
