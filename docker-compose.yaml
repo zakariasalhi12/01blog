@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  database:
+  postgres:
     image: postgres:17
     environment:
       - POSTGRES_USER=01blog
@@ -14,6 +14,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8000:8000
+    depends_on:
+      - postgres
   frontend:
     build:
       context: ./Frontend
