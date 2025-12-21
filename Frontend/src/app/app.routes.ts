@@ -8,9 +8,10 @@ import { Post } from './pages/post/post';
 import { Profile } from './pages/profile/profile';
 import { MyProfile } from './pages/my-profile/my-profile';
 import { Notifications } from './pages/notifications/notifications';
+import { Admin } from './pages/admin/admin';
 
 export const routes: Routes = [
-    // {path: "admin", component: Home , canActivate:[authGuard]},
+    {path: "admin", component: Admin , canActivate:[authGuard]},
     {path: "login" , component: Login , canActivate:[authGuard]},
     {path: "register" , component: Register , canActivate:[authGuard]},
     {path: "profile/me", component: MyProfile , canActivate:[authGuard]},
