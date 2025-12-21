@@ -1,6 +1,6 @@
 import { BackedURL } from "../../environments/environment";
 
-export function getFullFileUrl(fileUrl: string | undefined): string | undefined {
-    if (!fileUrl) return undefined;
+export function getFullFileUrl(fileUrl: string | undefined): string | null {
+    if (!fileUrl) return null;
     return `${BackedURL}${fileUrl}`;
   }

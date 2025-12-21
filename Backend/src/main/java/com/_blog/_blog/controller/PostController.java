@@ -100,4 +100,17 @@ public class PostController {
     ) {
         return reportService.reportPost(postId, request.getReason());
     }
+
+    @GetMapping("/posts/reports")
+    public ResponseEntity<?> getUserReports(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return reportService.getUserReports(page, size);
+    }
+
+    @DeleteMapping("/posts/reports/{reportId}")
+    public ResponseEntity<?> deleteUserReport(@PathVariable Long reportId) {
+        return reportService.deleteUserReport(reportId);
+    }
 }

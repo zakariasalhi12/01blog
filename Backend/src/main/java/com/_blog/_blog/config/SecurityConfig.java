@@ -35,7 +35,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Lambda syntax
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/admin").hasRole("ADMIN")
+                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                 .requestMatchers("/uploads/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll() // login/signup open
                 .anyRequest().authenticated() // all other endpoints require auth

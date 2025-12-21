@@ -40,4 +40,16 @@ export class PostService {
     return this.http.post(`${APIUrl}/posts`, formData);
   }
 
+  updatePost(postId: number, title: string, content: string, file?: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+
+    if (file) {
+      formData.append('file', file, file.name);
+    }
+
+    return this.http.put(`${APIUrl}/posts/${postId}`, formData);
+  }
+
 }

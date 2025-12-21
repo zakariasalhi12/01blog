@@ -28,6 +28,7 @@ export class MainHeader implements OnInit {
 
   avatar = signal('');
   profile_popup = signal(false);
+  userRole = signal<string>('');
 
   notifications: Notification[] = [];
   notifications_open = signal(false);
@@ -48,6 +49,7 @@ export class MainHeader implements OnInit {
     this.auth.logged().subscribe({
       next: (res) => {
         this.avatar.set(`${BackedURL}${res.avatar}`);
+        this.userRole.set(res.role || '');
       },
       error: (e) => console.error(e),
     });

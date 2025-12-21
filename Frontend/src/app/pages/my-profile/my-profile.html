@@ -1,1 +1,58 @@
 <app-main-header></app-main-header>
+
+<div class="profile-page" *ngIf="!loading; else loadingTpl">
+  <div class="card">
+    <div class="card-header">
+      <div class="avatar">
+        <img *ngIf="avatarPreview; else placeholder" [src]="avatarPreview" alt="avatar" />
+        <ng-template #placeholder>
+          <mat-icon fontSet="material-icons-outlined">person</mat-icon>
+        </ng-template>
+        <label class="upload-btn">
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+          Change avatar
+        </label>
+      </div>
+      <div class="info">
+        <h2>{{ profile?.username }}</h2>
+        <p>Joined: {{ profile?.createdAt | date }}</p>
+        <p *ngIf="profile?.role">Role: {{ profile?.role }}</p>
+      </div>
+    </div>
+
+    <div class="messages">
+      <div class="success" *ngIf="success">{{ success }}</div>
+      <div class="error" *ngIf="error">{{ error }}</div>
+    </div>
+
+    <div class="form-grid">
+      <label>
+        Username
+        <input type="text" [(ngModel)]="username" disabled />
+      </label>
+
+      <label>
+        Email
+        <input type="email" [(ngModel)]="email" />
+      </label>
+
+      <label>
+        Age
+        <input type="number" [(ngModel)]="age" min="0" disabled />
+      </label>
+
+      <label>
+        New Password
+        <input type="password" [(ngModel)]="password" placeholder="Leave blank to keep current" />
+      </label>
+    </div>
+
+    <div class="actions">
+      <button class="save-btn" (click)="save()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="loading">Loading profile...</div>
+</ng-template>

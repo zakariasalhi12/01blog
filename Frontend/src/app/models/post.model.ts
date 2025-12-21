@@ -12,6 +12,8 @@ export interface Post {
   likedByCurrentUser: boolean;
   owner :boolean;
   authorId : number;
+  reportedByCurrentUser?: boolean;
+  reportId?: number;
 }
 
 export interface PostsResponse {

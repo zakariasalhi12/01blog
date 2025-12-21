@@ -11,6 +11,10 @@
                 <mat-icon fontSet="material-icons-outlined">account_circle</mat-icon>
                 <p>Profile</p>
             </div>
+            <div *ngIf="userRole() === 'ADMIN'" routerLink="/admin">
+                <mat-icon fontSet="material-icons-outlined">admin_panel_settings</mat-icon>
+                <p>Admin</p>
+            </div>
             <div (click)="onLogout()">
                 <mat-icon fontSet="material-icons-outlined">logout</mat-icon>
                 <p>Logout</p>

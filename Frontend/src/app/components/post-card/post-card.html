@@ -35,6 +35,46 @@
             <mat-icon fontSet="material-icons-outlined">comment</mat-icon>
             <span>{{ post.commentsCount }}</span>
         </div>
+        <div *ngIf="post.owner" (click)="openEditModal()" class="edit-btn" title="Edit post">
+            <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+        </div>
+        <div *ngIf="!post.owner && !post.reportedByCurrentUser" (click)="openReportModal()" class="report-btn" title="Report post">
+            <mat-icon fontSet="material-icons-outlined">flag</mat-icon>
+        </div>
+        <div *ngIf="!post.owner && post.reportedByCurrentUser" (click)="undoReport()" class="undo-report-btn" title="Undo report">
+            <mat-icon fontSet="material-icons-outlined">flag</mat-icon>
+            <span>Reported</span>
+        </div>
     </div>
 
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Edit Post</h2>
+        <input type="text" [(ngModel)]="editTitle" placeholder="Title" class="modal-input">
+        <textarea [(ngModel)]="editContent" placeholder="Content" class="modal-textarea" rows="5"></textarea>
+        <input type="file" (change)="onEditFileSelected($event)" accept="image/*,video/*" class="modal-file-input">
+        <div *ngIf="editPreviewUrl" class="preview-container">
+            <img *ngIf="editPreviewUrl.startsWith('data:image')" [src]="editPreviewUrl" alt="Preview" class="preview-image">
+            <video *ngIf="editPreviewUrl.startsWith('data:video')" [src]="editPreviewUrl" controls class="preview-video"></video>
+        </div>
+        <div class="modal-actions">
+            <button (click)="closeEditModal()" class="btn-cancel">Cancel</button>
+            <button (click)="updatePost()" class="btn-save">Update</button>
+        </div>
+    </div>
+</div>
+
+<!-- Report Modal -->
+<div class="modal-overlay" *ngIf="showReportModal" (click)="closeReportModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Report Post</h2>
+        <textarea [(ngModel)]="reportReason" placeholder="Reason for reporting..." class="modal-textarea" rows="5"></textarea>
+        <div class="modal-actions">
+            <button (click)="closeReportModal()" class="btn-cancel">Cancel</button>
+            <button (click)="reportPost()" class="btn-report">Report</button>
+        </div>
+    </div>
 </div>

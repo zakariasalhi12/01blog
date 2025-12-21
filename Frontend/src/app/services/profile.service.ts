@@ -16,11 +16,24 @@ export class ProfileService {
       return this.http.get<Profile>(`${APIUrl}/profile/${Id}`, {});
     }
 
+    me(): Observable<Profile> {
+      return this.http.get<Profile>(`${APIUrl}/profile/me`, {});
+    }
+
     checksub(Id: number): Observable<boolean> {
       return this.http.get<boolean>(`${APIUrl}/profile/subscribe/check?id=${Id}`, {});
     }
 
     sub(Id: number): Observable<any> {
       return this.http.get<any>(`${APIUrl}/profile/subscribe?id=${Id}`, {});
+    }
+
+    updateProfile(data: Partial<Profile> & { password?: string }, avatar?: File): Observable<any> {
+      const formData = new FormData();
+      formData.append('updateData', new Blob([JSON.stringify(data)], { type: 'application/json' }));
+      if (avatar) {
+        formData.append('avatar', avatar, avatar.name);
+      }
+      return this.http.put(`${APIUrl}/profile`, formData);
     }
 }

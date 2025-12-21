@@ -1,10 +1,18 @@
 package com._blog._blog.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -12,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com._blog._blog.dto.FullProfileResponse;
 import com._blog._blog.dto.ProfileResponse;
+import com._blog._blog.dto.UserListResponse;
 import com._blog._blog.models.User;
 import com._blog._blog.repository.SubscriptionsRepository;
 import com._blog._blog.repository.UserRepository;
@@ -110,9 +119,6 @@ public class UserService {
         User user = userOpt.get();
 
         // 4️⃣ Update fields as before
-        if (updateData.getUsername() != null) {
-            user.setUsername(updateData.getUsername());
-        }
         if (updateData.getEmail() != null) {
             user.setEmail(updateData.getEmail());
         }
@@ -134,5 +140,74 @@ public class UserService {
         userRepository.save(user);
 
         return ResponseEntity.ok("User updated successfully");
+    }
+
+    public ResponseEntity<?> getAllUsers(int page, int size) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> loggedUserOpt = userRepository.findByUsername(username);
+
+        if (loggedUserOpt.isEmpty()) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        User loggedUser = loggedUserOpt.get();
+        if (!loggedUser.getRole().equals(User.Role.ADMIN)) {
+            return ResponseEntity.status(403).body("Forbidden: Admin access required");
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<User> usersPage = userRepository.findAll(pageable);
+
+        List<UserListResponse> userList = usersPage.getContent().stream()
+            .map(user -> new UserListResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole().toString()
+            ))
+            .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("users", userList);
+        response.put("currentPage", usersPage.getNumber());
+        response.put("totalPages", usersPage.getTotalPages());
+        response.put("totalUsers", usersPage.getTotalElements());
+
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<?> updateUserRole(Long userId, String role) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> loggedUserOpt = userRepository.findByUsername(username);
+
+        if (loggedUserOpt.isEmpty()) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        User loggedUser = loggedUserOpt.get();
+        if (!loggedUser.getRole().equals(User.Role.ADMIN)) {
+            return ResponseEntity.status(403).body("Forbidden: Admin access required");
+        }
+
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+
+        User user = userOpt.get();
+        
+        // Prevent admin from changing their own role
+        if (user.getId().equals(loggedUser.getId())) {
+            return ResponseEntity.status(400).body("Cannot change your own role");
+        }
+
+        try {
+            User.Role newRole = User.Role.valueOf(role.toUpperCase());
+            user.setRole(newRole);
+            userRepository.save(user);
+            return ResponseEntity.ok("User role updated successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body("Invalid role: " + role);
+        }
     }
 }
