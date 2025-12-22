@@ -7,44 +7,41 @@
   </div>
 
   <div class="messages">
-    <div class="error-message" *ngIf="error">
-      {{ error }}
+    <div class="error-message" *ngIf="error()">
+      {{ error() }}
     </div>
-    <div class="success-message" *ngIf="success">
-      {{ success }}
+    <div class="success-message" *ngIf="success()">
+      {{ success() }}
     </div>
   </div>
 
   <!-- Tabs -->
   <div class="tabs">
-    <button 
-      class="tab-btn" 
-      [class.active]="activeTab === 'users'"
-      (click)="activeTab = 'users'">
+    <button class="tab-btn" [class.active]="activeTab() === 'users'" (click)="activeTab.set('users')">
       Users
     </button>
-    <button 
-      class="tab-btn" 
-      [class.active]="activeTab === 'reports'"
-      (click)="activeTab = 'reports'">
+    <button class="tab-btn" [class.active]="activeTab() === 'reports'" (click)="activeTab.set('reports')">
       Reports
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'posts'" (click)="activeTab.set('posts')">
+      Posts
     </button>
   </div>
 
   <!-- Users Section -->
-  <div class="users-section" *ngIf="activeTab === 'users'">
+  <div class="users-section" *ngIf="activeTab() === 'users'">
     <div class="section-header">
       <h2>Users Management</h2>
-      <button class="refresh-btn" (click)="loadUsers()" [disabled]="loading">
-        {{ loading ? 'Loading...' : 'Refresh' }}
+      <button class="refresh-btn" (click)="loadUsers()" [disabled]="loading()">
+        {{ loading() ? 'Loading...' : 'Refresh' }}
       </button>
     </div>
 
-    <div class="loading" *ngIf="loading && users.length === 0">
+    <div class="loading" *ngIf="loading() && users().length === 0">
       Loading users...
     </div>
 
-    <div class="users-table-container" *ngIf="!loading || users.length > 0">
+    <div class="users-table-container" *ngIf="!loading() || users().length > 0">
       <table class="users-table">
         <thead>
           <tr>
@@ -56,7 +53,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of users" [class.banned]="user.role === 'BANNED'">
+          <tr *ngFor="let user of users()" [class.banned]="user.role === 'BANNED'">
             <td>{{ user.id }}</td>
             <td>{{ user.username }}</td>
             <td>{{ user.email }}</td>
@@ -67,26 +64,17 @@
             </td>
             <td class="actions-cell">
               <div class="action-buttons">
-                <button 
-                  class="btn btn-ban" 
-                  (click)="banUser(user)"
-                  [disabled]="user.role === 'BANNED'"
+                <button class="btn btn-ban icon-btn" (click)="banUser(user)" [disabled]="user.role === 'BANNED'"
                   title="Ban user">
-                  Ban
+                  <span class="material-icons">block</span>
                 </button>
-                <button 
-                  class="btn btn-admin" 
-                  (click)="makeAdmin(user)"
-                  [disabled]="user.role === 'ADMIN'"
+                <button class="btn btn-admin icon-btn" (click)="makeAdmin(user)" [disabled]="user.role === 'ADMIN'"
                   title="Make admin">
-                  Make Admin
+                  <span class="material-icons">admin_panel_settings</span>
                 </button>
-                <button 
-                  class="btn btn-user" 
-                  (click)="makeNormalUser(user)"
-                  [disabled]="user.role === 'USER'"
+                <button class="btn btn-user icon-btn" (click)="makeNormalUser(user)" [disabled]="user.role === 'USER'"
                   title="Make normal user">
-                  Make User
+                  <span class="material-icons">person</span>
                 </button>
               </div>
             </td>
@@ -95,38 +83,28 @@
       </table>
     </div>
 
-    <div class="no-users" *ngIf="!loading && users.length === 0">
+    <div class="no-users" *ngIf="!loading() && users().length === 0">
       No users found.
     </div>
 
     <!-- Pagination -->
-    <div class="pagination-container" *ngIf="totalPages > 1 && !loading">
+    <div class="pagination-container" *ngIf="totalPages() > 1 && !loading()">
       <div class="pagination-info">
-        Showing page {{ currentPage + 1 }} of {{ totalPages }} ({{ totalUsers }} total users)
+        Showing page {{ currentPage() + 1 }} of {{ totalPages() }} ({{ totalUsers() }} total users)
       </div>
       <div class="pagination-controls">
-        <button 
-          class="pagination-btn" 
-          (click)="previousPage()" 
-          [disabled]="currentPage === 0">
+        <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage() === 0">
           Previous
         </button>
-        
+
         <div class="page-numbers">
-          <button 
-            *ngFor="let pageNum of getPageNumbers()"
-            class="page-number"
-            [class.active]="pageNum === currentPage"
-            (click)="goToPage(pageNum)"
-            [disabled]="pageNum === currentPage">
+          <button *ngFor="let pageNum of pageNumbers()" class="page-number" [class.active]="pageNum === currentPage()"
+            (click)="goToPage(pageNum)" [disabled]="pageNum === currentPage()">
             {{ pageNum + 1 }}
           </button>
         </div>
-        
-        <button 
-          class="pagination-btn" 
-          (click)="nextPage()" 
-          [disabled]="currentPage >= totalPages - 1">
+
+        <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage() >= totalPages() - 1">
           Next
         </button>
       </div>
@@ -134,19 +112,19 @@
   </div>
 
   <!-- Reports Section -->
-  <div class="reports-section" *ngIf="activeTab === 'reports'">
+  <div class="reports-section" *ngIf="activeTab() === 'reports'">
     <div class="section-header">
       <h2>Reports Management</h2>
-      <button class="refresh-btn" (click)="loadReports()" [disabled]="loadingReports">
-        {{ loadingReports ? 'Loading...' : 'Refresh' }}
+      <button class="refresh-btn icon-btn" (click)="loadReports()" [disabled]="loadingReports()" title="Refresh">
+        <span class="material-icons">refresh</span>
       </button>
     </div>
 
-    <div class="loading" *ngIf="loadingReports && reports.length === 0">
+    <div class="loading" *ngIf="loadingReports() && reports().length === 0">
       Loading reports...
     </div>
 
-    <div class="reports-table-container" *ngIf="!loadingReports || reports.length > 0">
+    <div class="reports-table-container" *ngIf="!loadingReports() || reports().length > 0">
       <table class="reports-table">
         <thead>
           <tr>
@@ -160,7 +138,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let report of reports">
+          <tr *ngFor="let report of reports()">
             <td>{{ report.id }}</td>
             <td>{{ report.reporterUsername }}</td>
             <td>
@@ -179,11 +157,8 @@
             <td class="reason-cell">{{ report.reason }}</td>
             <td>{{ timeAgo(report.createdAt) }}</td>
             <td class="actions-cell">
-              <button 
-                class="btn btn-delete" 
-                (click)="deleteReport(report.id)"
-                title="Delete report">
-                Delete
+              <button class="btn btn-delete icon-btn" (click)="deleteReport(report.id)" title="Delete report">
+                <span class="material-icons">delete</span>
               </button>
             </td>
           </tr>
@@ -191,41 +166,123 @@
       </table>
     </div>
 
-    <div class="no-reports" *ngIf="!loadingReports && reports.length === 0">
+    <div class="no-reports" *ngIf="!loadingReports() && reports().length === 0">
       No reports found.
     </div>
 
     <!-- Reports Pagination -->
-    <div class="pagination-container" *ngIf="reportsTotalPages > 1 && !loadingReports">
+    <div class="pagination-container" *ngIf="reportsTotalPages() > 1 && !loadingReports()">
       <div class="pagination-info">
-        Showing page {{ reportsCurrentPage + 1 }} of {{ reportsTotalPages }} ({{ reportsTotalReports }} total reports)
+        Showing page {{ reportsCurrentPage() + 1 }} of {{ reportsTotalPages() }} ({{ reportsTotalReports() }} total
+        reports)
       </div>
       <div class="pagination-controls">
-        <button 
-          class="pagination-btn" 
-          (click)="previousReportsPage()" 
-          [disabled]="reportsCurrentPage === 0">
+        <button class="pagination-btn" (click)="previousReportsPage()" [disabled]="reportsCurrentPage() === 0">
           Previous
         </button>
-        
+
         <div class="page-numbers">
-          <button 
-            *ngFor="let pageNum of getReportsPageNumbers()"
-            class="page-number"
-            [class.active]="pageNum === reportsCurrentPage"
-            (click)="goToReportsPage(pageNum)"
-            [disabled]="pageNum === reportsCurrentPage">
+          <button *ngFor="let pageNum of reportsPageNumbers()" class="page-number"
+            [class.active]="pageNum === reportsCurrentPage()" (click)="goToReportsPage(pageNum)"
+            [disabled]="pageNum === reportsCurrentPage()">
             {{ pageNum + 1 }}
           </button>
         </div>
-        
-        <button 
-          class="pagination-btn" 
-          (click)="nextReportsPage()" 
-          [disabled]="reportsCurrentPage >= reportsTotalPages - 1">
+
+        <button class="pagination-btn" (click)="nextReportsPage()"
+          [disabled]="reportsCurrentPage() >= reportsTotalPages() - 1">
           Next
         </button>
       </div>
     </div>
   </div>
+
+  <!-- Posts Section -->
+  <div class="posts-section" *ngIf="activeTab() === 'posts'">
+    <div class="section-header">
+      <h2>Posts Management</h2>
+      <button class="refresh-btn" (click)="loadPosts()" [disabled]="loadingPosts()">
+        {{ loadingPosts() ? 'Loading...' : 'Refresh' }}
+      </button>
+    </div>
+
+    <div class="loading" *ngIf="loadingPosts() && posts().length === 0">
+      Loading posts...
+    </div>
+
+    <div class="posts-table-container" *ngIf="!loadingPosts() || posts().length > 0">
+      <table class="posts-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Created</th>
+            <th>Likes</th>
+            <th>Visibility</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let post of posts()" [class.hidden]="!post.visible">
+            <td>{{ post.id }}</td>
+            <td class="post-title">{{ post.title }}</td>
+            <td>{{ post.author }}</td>
+            <td>{{ timeAgo(post.createdAt) }}</td>
+            <td>{{ post.likesCount }}</td>
+            <td>
+              <span class="visibility-badge" [class.visible]="post.visible" [class.hidden-badge]="!post.visible">
+                {{ post.visible ? 'Visible' : 'Hidden' }}
+              </span>
+            </td>
+            <td class="actions">
+              <button class="action-btn toggle-btn icon-btn"
+                (click)="togglePostVisibility(post.id, post.visible, post.title)"
+                [title]="post.visible ? 'Hide post' : 'Show post'">
+                <span class="material-icons">{{ post.visible ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+              <button class="action-btn delete-btn icon-btn" (click)="deletePost(post.id, post.title)"
+                title="Delete post">
+                <span class="material-icons">delete</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="no-posts" *ngIf="!loadingPosts() && posts().length === 0">
+      No posts found.
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container" *ngIf="postsTotalPages() > 1 && !loadingPosts()">
+      <div class="pagination-info">
+        Showing page {{ postsCurrentPage() + 1 }} of {{ postsTotalPages() }} ({{ postsTotalPosts() }} total posts)
+      </div>
+      <div class="pagination-controls">
+        <button class="pagination-btn" (click)="previousPostsPage()" [disabled]="postsCurrentPage() === 0">
+          Previous
+        </button>
+
+        <div class="page-numbers">
+          <button *ngFor="let pageNum of postsPageNumbers()" class="page-number"
+            [class.active]="pageNum === postsCurrentPage()" (click)="goToPostsPage(pageNum)"
+            [disabled]="pageNum === postsCurrentPage()">
+            {{ pageNum + 1 }}
+          </button>
+        </div>
+
+        <button class="pagination-btn" (click)="nextPostsPage()"
+          [disabled]="postsCurrentPage() >= postsTotalPages() - 1">
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+<app-confirmation-modal *ngIf="confirmModalShow()" [title]="confirmModalTitle()" [message]="confirmModalMessage()"
+  (confirmed)="onModalConfirm()" (cancelled)="onModalCancel()">
+</app-confirmation-modal>

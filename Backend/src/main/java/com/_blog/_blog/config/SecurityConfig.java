@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                 .requestMatchers("/uploads/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll() // login/signup open
-                .anyRequest().authenticated() // all other endpoints require auth
+                .anyRequest().hasAnyAuthority("USER", "ADMIN") // all other endpoints require non-banned roles
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

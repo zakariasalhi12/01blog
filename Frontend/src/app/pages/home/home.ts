@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { PostService } from '../../services/post.service';
+import { ReportService } from '../../services/report.service';
 import { Post } from '../../models/post.model';
 import { BackedURL } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
@@ -10,7 +11,7 @@ import { MainHeader } from '../../components/main-header/main-header';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, PostCard , CreatePost , MainHeader],
+  imports: [CommonModule, PostCard, CreatePost, MainHeader],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
@@ -21,14 +22,43 @@ export class Home implements OnInit {
   size = 5;
   loading = false;
   hasMore = true;
+  userReports: Map<number, number> = new Map(); // postId -> reportId
+
+  feedType: 'all' | 'subscribed' = 'subscribed';
 
   constructor(
     private postService: PostService,
+    private reportService: ReportService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    this.loadUserReports();
     this.loadPosts();
+  }
+
+  switchFeed(type: 'all' | 'subscribed'): void {
+    if (this.feedType === type) return;
+    this.feedType = type;
+    this.posts = [];
+    this.page = 0;
+    this.hasMore = true;
+    this.loadPosts();
+  }
+
+  loadUserReports(): void {
+    this.reportService.getUserReports(0, 100).subscribe({
+      next: (res) => {
+        res.reports.forEach(report => {
+          if (report.postId) {
+            this.userReports.set(report.postId, report.id);
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error loading user reports', err);
+      }
+    });
   }
 
   loadPosts() {
@@ -36,7 +66,11 @@ export class Home implements OnInit {
 
     this.loading = true;
 
-    this.postService.getPosts(this.page, this.size).subscribe({
+    const request = this.feedType === 'subscribed'
+      ? this.postService.getSubscribedPosts(this.page, this.size)
+      : this.postService.getPosts(this.page, this.size);
+
+    request.subscribe({
       next: res => {
         this.posts = [...this.posts, ...res.posts];
 

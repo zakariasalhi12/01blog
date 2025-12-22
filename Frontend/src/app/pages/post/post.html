@@ -3,45 +3,108 @@
 <h1 class="title"> Post </h1>
 
 <section class="post" *ngIf="post() as profile">
-    <div class="post-container">
+  <div class="post-container">
 
-        <div class="post-header">
-            <div class="profile" , [routerLink]="['/profile' , post().authorId]" >
-                <img [src]="getFullFileUrl(post().avatar)" alt="profile">
-                <p>{{ post().author }}</p>
-            </div>
+    <div class="post-header">
+      <div class="profile" , [routerLink]="['/profile' , post().authorId]">
+        <img [src]="getFullFileUrl(post().avatar)" alt="profile">
+        <p>{{ post().author }}</p>
+      </div>
 
-            <p>{{ timeAgo(post().createdAt) }} </p>
-        </div>
-        <div class="post-content">
-            <h1>{{ post().title }}</h1>
-            <p>{{ post().content }}</p>
-
-            <div class="img">
-                <img *ngIf="post().mediaType === 'image'" [src]="getFullFileUrl(post().fileUrl)" alt="post image">
-
-                <video *ngIf="post().mediaType === 'video'" controls>
-                    <source [src]="getFullFileUrl(post().fileUrl)" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-        </div>
-
-        <div class="post-footer">
-            <div [class.active]="post().likedByCurrentUser" (click)="likePost(post().id)">
-                <mat-icon fontSet="material-icons-outlined">arrow_upward</mat-icon>
-                <span>{{ post().likesCount }}</span>
-            </div>
-        </div>
+      <p>{{ timeAgo(post().createdAt) }} </p>
     </div>
+    <div class="post-content">
+      <h1>{{ post().title }}</h1>
+      <p>{{ post().content }}</p>
+
+      <div class="img">
+        <img *ngIf="post().mediaType === 'image'" [src]="getFullFileUrl(post().fileUrl)" alt="post image">
+
+        <video *ngIf="post().mediaType === 'video'" controls>
+          <source [src]="getFullFileUrl(post().fileUrl)" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+
+    <div class="post-footer">
+      <div [class.active]="post().likedByCurrentUser" (click)="likePost(post().id)">
+        <mat-icon fontSet="material-icons-outlined">arrow_upward</mat-icon>
+        <span>{{ post().likesCount }}</span>
+      </div>
+
+      <!-- Actions Menu Popup Trigger -->
+      <div class="post-actions" (click)="$event.stopPropagation()">
+        <button class="icon-btn" (click)="toggleMenu()">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+
+        <!-- Popup Menu -->
+        <div class="popup-menu" *ngIf="showMenu">
+          <button class="menu-item" (click)="openEditModal()" *ngIf="currentUser && post().authorId === currentUser.id">
+            <mat-icon>edit</mat-icon> Edit Post
+          </button>
+          <button class="menu-item delete" (click)="openReportModal()"
+            *ngIf="currentUser && post().authorId !== currentUser.id">
+            <mat-icon>flag</mat-icon> Report
+          </button>
+          <button class="menu-item delete" (click)="deletePost()"
+            *ngIf="currentUser && post().authorId === currentUser.id">
+            <mat-icon>delete</mat-icon> Delete Post
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2>Edit Post</h2>
+    <input type="text" [(ngModel)]="editTitle" placeholder="Title" class="modal-input">
+    <textarea [(ngModel)]="editContent" placeholder="Content" class="modal-textarea" rows="5"></textarea>
+    <!-- File input handled separately for simplicity or reused -->
+    <input type="file" (change)="onEditFileSelected($event)" accept="image/*,video/*" class="modal-file-input">
+    <div *ngIf="editPreviewUrl" class="preview-container">
+      <img *ngIf="editPreviewUrl.startsWith('data:image') || post().mediaType === 'image'" [src]="editPreviewUrl"
+        class="preview-image">
+      <!-- Simplified preview for now -->
+    </div>
+
+    <div class="modal-actions">
+      <button (click)="closeEditModal()" class="btn-cancel">Cancel</button>
+      <button (click)="updatePost()" class="btn-save">Update</button>
+    </div>
+  </div>
+</div>
+
+<!-- Report Modal -->
+<div class="modal-overlay" *ngIf="showReportModal" (click)="closeReportModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2>Report Post</h2>
+    <textarea [(ngModel)]="reportReason" placeholder="Reason for reporting..." class="modal-textarea"
+      rows="5"></textarea>
+    <div class="modal-actions">
+      <button (click)="closeReportModal()" class="btn-cancel">Cancel</button>
+      <button (click)="reportPost()" class="btn-report">Report</button>
+    </div>
+  </div>
+</div>
 
 <h1 class="title"> Comments</h1>
 
 <div class="create-comment">
-  <label for="comment">Comment content</label>
-  <textarea id="comment" [(ngModel)]="commentContent" name="commentContent" rows="3" placeholder="Write your comment..."></textarea>
-  <button (click)="submitComment()">Submit</button>
+  <label for="comment">
+    <mat-icon>chat_bubble_outline</mat-icon>
+    New Comment
+  </label>
+  <textarea id="comment" [(ngModel)]="commentContent" name="commentContent" rows="3"
+    placeholder="Share your thoughts..."></textarea>
+  <button (click)="submitComment()">
+    Send
+    <mat-icon>send</mat-icon>
+  </button>
 </div>
 
 <section class="comments">
@@ -51,17 +114,26 @@
         <img [src]="getFullFileUrl(comment.avatar)" alt="avatar">
         <h1>{{ comment.username }}</h1>
       </div>
-      <p>{{ timeAgo(comment.createdAt) }}</p>
+      <div class="comment-info">
+        <p>{{ timeAgo(comment.createdAt) }}</p>
+        <button class="delete-btn" *ngIf="comment.owner" (click)="deleteComment(comment.commentId || comment.id)"
+          title="Delete comment">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </div>
     </div>
     <div class="comment-content">
       <p>{{ comment.content }}</p>
     </div>
   </div>
 
-  <div *ngIf="loadingComments"><p>Loading comments...</p></div>
+  <div *ngIf="loadingComments">
+    <p>Loading comments...</p>
+  </div>
   <div *ngIf="!loadingComments && !allCommentsLoaded">
     <button (click)="loadComments()">Load more comments</button>
   </div>
-  <div *ngIf="allCommentsLoaded"><p>No more comments.</p></div>
+  <div *ngIf="allCommentsLoaded">
+    <p>No more comments.</p>
+  </div>
 </section>
-

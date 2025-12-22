@@ -23,10 +23,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final JwtBlacklist jwtBlacklist;
+    private final com._blog._blog.service.CustomUserDetailsService userDetailsService;
 
-    public JwtAuthFilter(JwtUtil jwtUtil, JwtBlacklist jwtBlacklist) {
+    public JwtAuthFilter(JwtUtil jwtUtil, JwtBlacklist jwtBlacklist, com._blog._blog.service.CustomUserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.jwtBlacklist = jwtBlacklist;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -45,13 +47,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             try {
                 if (jwtUtil.validateToken(token)) {
                     String username = jwtUtil.extractUsername(token);
-                    String role = jwtUtil.extractRole(token);
+                    // Load fresh user details from DB to enforce bans immediately
+                    org.springframework.security.core.userdetails.UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                     UsernamePasswordAuthenticationToken auth
                             = new UsernamePasswordAuthenticationToken(
-                                    username,
+                                    userDetails,
                                     null,
-                                    List.of(() -> role)
+                                    userDetails.getAuthorities()
                             );
 
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Post, PostsResponse } from '../models/post.model';
-import { APIUrl, BackedURL } from '../../environments/environment';
+import { APIUrl } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
-
 
   constructor(private http: HttpClient) { }
 
@@ -16,16 +15,20 @@ export class PostService {
     return this.http.get<PostsResponse>(`${APIUrl}/posts?page=${page}&size=${size}`);
   }
 
-  getSinglePost(id : number = 0): Observable<Post> {
+  getSinglePost(id: number = 0): Observable<Post> {
     return this.http.get<Post>(`${APIUrl}/posts?id=${id}`)
   }
 
-  getmyPosts(page : number = 0 , size : number = 10 ): Observable<PostsResponse> {
+  getmyPosts(page: number = 0, size: number = 10): Observable<PostsResponse> {
     return this.http.get<PostsResponse>(`${APIUrl}/posts/me?page=${page}&size=${size}`)
   }
 
-  getbyAuthor(id:number , page : number = 0 , size : number = 10 ): Observable<PostsResponse> {
+  getbyAuthor(id: number, page: number = 0, size: number = 10): Observable<PostsResponse> {
     return this.http.get<PostsResponse>(`${APIUrl}/posts/user/${id}?page=${page}&size=${size}`)
+  }
+
+  getSubscribedPosts(page: number = 0, size: number = 10): Observable<PostsResponse> {
+    return this.http.get<PostsResponse>(`${APIUrl}/posts/subscribed?page=${page}&size=${size}`);
   }
 
   createPost(title: string, content: string, file?: File): Observable<any> {
@@ -50,6 +53,10 @@ export class PostService {
     }
 
     return this.http.put(`${APIUrl}/posts/${postId}`, formData);
+  }
+
+  deletePost(postId: number): Observable<any> {
+    return this.http.delete(`${APIUrl}/posts/${postId}`, { responseType: 'text' });
   }
 
 }

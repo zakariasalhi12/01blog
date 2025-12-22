@@ -3,7 +3,7 @@
 header {
     color: var(--font-color);
     background-color: var(--white-smoke);
-    box-shadow: 1px 1px 20px 20px var(--default-box-shadow-color) ;
+    box-shadow: 1px 1px 20px 20px var(--default-box-shadow-color);
     padding: 15px;
     display: flex;
     justify-content: space-around;
@@ -25,6 +25,7 @@ header {
     position: relative;
 
 }
+
 .red-dot {
     width: 10px;
     height: 10px;
@@ -40,24 +41,6 @@ header {
     cursor: pointer;
 }
 
-.admin-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--font-color);
-    transition: all 0.3s linear;
-}
-
-.admin-icon mat-icon {
-    font-size: 27px;
-}
-
-.admin-icon:hover {
-    transform: scale(1.1);
-    color: #007bff;
-}
-
 header h1 {
     font-family: "Lobster", sans-serif !important;
     font-weight: 600;
@@ -68,12 +51,14 @@ header h1 {
     cursor: pointer;
     user-select: none;
 }
+
 header img {
     width: 45px;
     height: 45px;
     border-radius: 50%;
     cursor: pointer;
 }
+
 header img:hover {
     transform: scale(1.05);
     transition: all 0.3s linear;
@@ -210,18 +195,40 @@ header img:hover {
 
 
 .title {
-  font-size: 1.3rem;
-  font-weight: 600;
+    font-size: 1.3rem;
+    font-weight: 600;
 }
 
 .notification.unseen {
-  border-left: 4px solid #4f46e5;
-  background-color: #f5f7ff;
+    border-left: 4px solid #4f46e5;
+    background-color: #f5f7ff;
 }
 
 .loading,
 .end {
-  padding: 12px;
-  font-size: 0.9rem;
-  color: #777;
+    padding: 12px;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+font-size: 0.9rem;
+}
+}
+
+
+.title {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.notification.unseen {
+    border-left: 4px solid #4f46e5;
+    background-color: #f5f7ff;
+}
+
+.loading,
+.end {
+    padding: 12px;
+    font-size: 0.9rem;
+    color: #777;
 }

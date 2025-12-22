@@ -37,6 +37,10 @@ public class Post {
     @Column(nullable = false , name = "likes_count")
     private long likesCount = 0;
 
+    // Visibility flag (only admin can change)
+    @Column(nullable = false)
+    private boolean visible = true;
+
     // Constructors
     public Post() {}
 
@@ -45,6 +49,7 @@ public class Post {
         this.title = title;
         this.content = content;
         this.videoOrImageUrl = videoOrImageUrl;
+        this.visible = true; // Default to visible
     }
 
     // Getters and setters
@@ -61,6 +66,9 @@ public class Post {
 
     public long getLikesCount() { return likesCount; }
     public void setLikesCount(long likesCount) { this.likesCount = likesCount; }
+
+    public boolean isVisible() { return visible; }
+    public void setVisible(boolean visible) { this.visible = visible; }
 
     // Helper methods
     public void incrementLikes() { this.likesCount++; }

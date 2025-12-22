@@ -12,7 +12,7 @@ export class ReportService {
   constructor(private http: HttpClient) { }
 
   reportPost(postId: number, reason: string): Observable<any> {
-    return this.http.post(`${APIUrl}/posts/${postId}/report`, { reason });
+    return this.http.post(`${APIUrl}/posts/${postId}/report`, { reason }, { responseType: 'text' });
   }
 
   getUserReports(page: number = 0, size: number = 10): Observable<ReportsResponse> {
@@ -20,7 +20,7 @@ export class ReportService {
   }
 
   deleteUserReport(reportId: number): Observable<any> {
-    return this.http.delete(`${APIUrl}/posts/reports/${reportId}`);
+    return this.http.delete(`${APIUrl}/posts/reports/${reportId}`, { responseType: 'text' });
   }
 
   getAllReports(page: number = 0, size: number = 10): Observable<ReportsResponse> {

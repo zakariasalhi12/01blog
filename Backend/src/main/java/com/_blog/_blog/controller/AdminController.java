@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com._blog._blog.service.ReportService;
 import com._blog._blog.service.UserService;
+import com._blog._blog.service.PostService;
 
 import java.util.Map;
 
@@ -25,6 +26,9 @@ public class AdminController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    PostService postService;
 
     @DeleteMapping("/report/{reportID}")
     public ResponseEntity<?> deleteReport(
@@ -59,6 +63,32 @@ public class AdminController {
         @org.springframework.web.bind.annotation.RequestParam(defaultValue = "10") int size
     ) {
         return reportService.showReports(page, size);
+    }
+
+    // Posts management
+    @GetMapping("/posts")
+    public ResponseEntity<?> getAllPosts(
+        @org.springframework.web.bind.annotation.RequestParam(defaultValue = "0") int page,
+        @org.springframework.web.bind.annotation.RequestParam(defaultValue = "10") int size
+    ) {
+        return postService.getAllPostsForAdmin(page, size);
+    }
+
+    @org.springframework.web.bind.annotation.PostMapping("/posts/{postId}/delete")
+    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
+        return postService.deletePostByAdmin(postId);
+    }
+
+    @PutMapping("/posts/{postId}/visibility")
+    public ResponseEntity<?> togglePostVisibility(
+        @PathVariable Long postId,
+        @RequestBody Map<String, Boolean> request
+    ) {
+        Boolean visible = request.get("visible");
+        if (visible == null) {
+            return ResponseEntity.badRequest().body("Visibility value is required");
+        }
+        return postService.togglePostVisibility(postId, visible);
     }
 
 }

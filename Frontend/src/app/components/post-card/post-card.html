@@ -2,7 +2,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined&display=swap" rel="stylesheet">
 </head>
 
-<div class="post" >
+<div class="post">
 
     <div class="post-header">
         <div [routerLink]="['/profile', post.authorId]">
@@ -35,15 +35,23 @@
             <mat-icon fontSet="material-icons-outlined">comment</mat-icon>
             <span>{{ post.commentsCount }}</span>
         </div>
-        <div *ngIf="post.owner" (click)="openEditModal()" class="edit-btn" title="Edit post">
-            <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
-        </div>
-        <div *ngIf="!post.owner && !post.reportedByCurrentUser" (click)="openReportModal()" class="report-btn" title="Report post">
-            <mat-icon fontSet="material-icons-outlined">flag</mat-icon>
-        </div>
-        <div *ngIf="!post.owner && post.reportedByCurrentUser" (click)="undoReport()" class="undo-report-btn" title="Undo report">
-            <mat-icon fontSet="material-icons-outlined">flag</mat-icon>
-            <span>Reported</span>
+        <!-- Actions Menu Trigger -->
+        <div class="post-actions" (click)="$event.stopPropagation()">
+            <button class="icon-btn" (click)="toggleMenu()">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <div class="popup-menu" *ngIf="showMenu">
+                <button class="menu-item" (click)="openEditModal()" *ngIf="post.owner">
+                    <mat-icon>edit</mat-icon> Edit Post
+                </button>
+                <button class="menu-item delete" (click)="openReportModal()"
+                    *ngIf="!post.owner && !post.reportedByCurrentUser">
+                    <mat-icon>flag</mat-icon> Report
+                </button>
+                <button class="menu-item" (click)="undoReport()" *ngIf="!post.owner && post.reportedByCurrentUser">
+                    <mat-icon>flag</mat-icon> Undo Report
+                </button>
+            </div>
         </div>
     </div>
 
@@ -57,8 +65,10 @@
         <textarea [(ngModel)]="editContent" placeholder="Content" class="modal-textarea" rows="5"></textarea>
         <input type="file" (change)="onEditFileSelected($event)" accept="image/*,video/*" class="modal-file-input">
         <div *ngIf="editPreviewUrl" class="preview-container">
-            <img *ngIf="editPreviewUrl.startsWith('data:image')" [src]="editPreviewUrl" alt="Preview" class="preview-image">
-            <video *ngIf="editPreviewUrl.startsWith('data:video')" [src]="editPreviewUrl" controls class="preview-video"></video>
+            <img *ngIf="editPreviewUrl.startsWith('data:image')" [src]="editPreviewUrl" alt="Preview"
+                class="preview-image">
+            <video *ngIf="editPreviewUrl.startsWith('data:video')" [src]="editPreviewUrl" controls
+                class="preview-video"></video>
         </div>
         <div class="modal-actions">
             <button (click)="closeEditModal()" class="btn-cancel">Cancel</button>
@@ -71,7 +81,8 @@
 <div class="modal-overlay" *ngIf="showReportModal" (click)="closeReportModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
         <h2>Report Post</h2>
-        <textarea [(ngModel)]="reportReason" placeholder="Reason for reporting..." class="modal-textarea" rows="5"></textarea>
+        <textarea [(ngModel)]="reportReason" placeholder="Reason for reporting..." class="modal-textarea"
+            rows="5"></textarea>
         <div class="modal-actions">
             <button (click)="closeReportModal()" class="btn-cancel">Cancel</button>
             <button (click)="reportPost()" class="btn-report">Report</button>

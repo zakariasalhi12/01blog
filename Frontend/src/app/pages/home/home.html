@@ -1,10 +1,13 @@
 <app-main-header></app-main-header>
 <app-create-post></app-create-post>
 
+<div class="feed-toggle">
+  <button [class.active]="feedType === 'subscribed'" (click)="switchFeed('subscribed')">Subscribed</button>
+  <button [class.active]="feedType === 'all'" (click)="switchFeed('all')">For you</button>
+</div>
+
 <div class="container">
-  <app-post-card
-    *ngFor="let post of posts"
-    [post]="post">
+  <app-post-card *ngFor="let post of posts" [post]="post" [userReports]="userReports">
   </app-post-card>
 </div>
 

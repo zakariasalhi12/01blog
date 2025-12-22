@@ -27,5 +27,18 @@ export class AdminService {
   deleteReport(reportId: number): Observable<any> {
     return this.http.delete(`${APIUrl}/admin/report/${reportId}`);
   }
+
+  // Posts management
+  getAllPosts(page: number = 0, size: number = 10): Observable<any> {
+    return this.http.get(`${APIUrl}/admin/posts?page=${page}&size=${size}`);
+  }
+
+  deletePost(postId: number): Observable<any> {
+    return this.http.post(`${APIUrl}/admin/posts/${postId}/delete`, {});
+  }
+
+  togglePostVisibility(postId: number, visible: boolean): Observable<any> {
+    return this.http.put(`${APIUrl}/admin/posts/${postId}/visibility`, { visible });
+  }
 }
 

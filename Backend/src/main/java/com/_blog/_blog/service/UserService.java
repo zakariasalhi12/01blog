@@ -118,7 +118,14 @@ public class UserService {
         }
         User user = userOpt.get();
 
-        // 4️⃣ Update fields as before
+        // 4️⃣ Reject username updates (not allowed)
+        // Note: Age is not checked here as it's a primitive int and can't be sent as null
+        // If age is sent, it will be ignored (not updated)
+        if (updateData.getUsername() != null && !updateData.getUsername().isEmpty()) {
+            return ResponseEntity.status(400).body("Username cannot be changed");
+        }
+
+        // 5️⃣ Update only allowed fields (email, password, avatar)
         if (updateData.getEmail() != null) {
             user.setEmail(updateData.getEmail());
         }

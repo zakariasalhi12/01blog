@@ -41,12 +41,14 @@ public class LoggedService {
                 .orElse("NO_ROLE");
 
         // Return JSON object with user info
+        User user = optionalUser.get();
         return ResponseEntity.ok(
                 new HashMap<String, Object>() {
             {
+                put("id", user.getId());
                 put("username", username);
                 put("role", role);
-                put("avatar", userRepository.findByUsername(username).get().getAvatar());
+                put("avatar", user.getAvatar());
             }
         }
         );

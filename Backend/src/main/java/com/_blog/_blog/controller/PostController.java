@@ -18,8 +18,13 @@ import com._blog._blog.service.LikeService;
 import com._blog._blog.service.PostService;
 import com._blog._blog.service.ReportService;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import org.springframework.validation.annotation.Validated;
+
 @RestController
 @RequestMapping("/api")
+@Validated
 public class PostController {
 
     @Autowired
@@ -34,8 +39,8 @@ public class PostController {
     // CREATE a post
     @PostMapping("/posts")
     public ResponseEntity<?> createPost(
-            @RequestParam("title") String title,
-            @RequestParam("content") String content,
+            @RequestParam("title") @NotBlank(message = "Title is required") @Size(min = 5, max = 100, message = "Title must be between 5 and 100 characters") String title,
+            @RequestParam("content") @NotBlank(message = "Content is required") @Size(min = 10, message = "Content must be at least 10 characters") String content,
             @RequestParam(value = "file", required = false) MultipartFile file) {
         return postService.createPost(title, content, file);
     }
@@ -59,6 +64,14 @@ public class PostController {
         return postService.getMyPosts(page, size);
     }
 
+    @GetMapping("/posts/subscribed")
+    public ResponseEntity<?> getSubscribedPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        return postService.getSubscribedPosts(page, size);
+    }
+
     @GetMapping("/posts/user/{id}")
     public ResponseEntity<?> getPostsByuser(
             @PathVariable Long id,
@@ -71,8 +84,8 @@ public class PostController {
     @PutMapping("/posts/{id}")
     public ResponseEntity<?> updatePost(
             @PathVariable Long id,
-            @RequestParam("title") String title,
-            @RequestParam("content") String content,
+            @RequestParam("title") @NotBlank(message = "Title is required") @Size(min = 5, max = 100, message = "Title must be between 5 and 100 characters") String title,
+            @RequestParam("content") @NotBlank(message = "Content is required") @Size(min = 10, message = "Content must be at least 10 characters") String content,
             @RequestParam(value = "file", required = false) MultipartFile file) {
 
         return postService.updatePost(id, title, content, file);
@@ -100,7 +113,6 @@ public class PostController {
     ) {
         return reportService.reportPost(postId, request.getReason());
     }
-
     @GetMapping("/posts/reports")
     public ResponseEntity<?> getUserReports(
             @RequestParam(defaultValue = "0") int page,

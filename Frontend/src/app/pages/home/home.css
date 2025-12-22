@@ -1,15 +1,53 @@
+/* Main container tweaks */
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    flex-direction: column;
-    gap: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-bottom: 2rem;
 }
 
+/* Loading & End states */
 .loading,
 .end {
   text-align: center;
-  margin: 20px 0;
-  color: gray;
+  padding: 2rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Feed Toggle */
+.feed-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 1rem auto 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+  max-width: 600px;
+}
+
+.feed-toggle button {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  color: #888;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.feed-toggle button.active {
+  color: black;
+  font-weight: 700;
+}
+
+.feed-toggle button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -0.6rem;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: black;
 }

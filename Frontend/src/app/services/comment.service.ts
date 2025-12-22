@@ -10,13 +10,17 @@ import { APIUrl } from '../../environments/environment';
 export class CommentService {
   private apiUrl = 'http://localhost:8000/api/comments';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   createComment(payload: { content: string; postId: number }): Observable<any> {
-    return this.http.post(this.apiUrl, payload);
+    return this.http.post(`${APIUrl}/comments`, payload, { responseType: 'text' });
   }
 
-    getComment(id: number, size: number = 0, page: number = 10) : Observable<commentResponse> {
-        return this.http.get<commentResponse>(`${APIUrl}/comments/${id}?page=${page}&size=${size}`);
-    }
+  getComment(id: number, size: number = 0, page: number = 10): Observable<commentResponse> {
+    return this.http.get<commentResponse>(`${APIUrl}/comments/${id}?page=${page}&size=${size}`);
+  }
+
+  deleteComment(id: number): Observable<any> {
+    return this.http.delete(`${APIUrl}/comments/${id}`, { responseType: 'text' });
+  }
 }

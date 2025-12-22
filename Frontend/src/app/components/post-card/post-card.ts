@@ -23,6 +23,7 @@ export class PostCard implements OnInit {
   getFullFileUrl = getFullFileUrl;
   showEditModal = false;
   showReportModal = false;
+  showMenu = false;
   editTitle = '';
   editContent = '';
   reportReason = '';
@@ -64,7 +65,18 @@ export class PostCard implements OnInit {
     });
   }
 
+  // ... existing methods
+
+  toggleMenu(): void {
+    this.showMenu = !this.showMenu;
+  }
+
+  closeMenu(): void {
+    this.showMenu = false;
+  }
+
   openEditModal(): void {
+    this.closeMenu();
     this.editTitle = this.post.title;
     this.editContent = this.post.content;
     const preview = this.post.fileUrl ? this.getFullFileUrl(this.post.fileUrl) : null;
@@ -118,6 +130,7 @@ export class PostCard implements OnInit {
   }
 
   openReportModal(): void {
+    this.closeMenu();
     this.showReportModal = true;
   }
 
@@ -148,6 +161,7 @@ export class PostCard implements OnInit {
   }
 
   undoReport(): void {
+    this.closeMenu();
     if (!this.post.reportId) return;
 
     this.reportService.deleteUserReport(this.post.reportId).subscribe({
@@ -158,6 +172,7 @@ export class PostCard implements OnInit {
           this.userReports.delete(this.post.id);
         }
         alert('Report removed successfully');
+        window.location.reload();
       },
       error: (err) => {
         console.error('Error removing report', err);

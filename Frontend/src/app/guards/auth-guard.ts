@@ -9,6 +9,21 @@ export const authGuard: CanActivateFn = async (route, state) => {
   try {
     const user = await authService.logged().toPromise();
 
+    // Check for BANNED role
+    if (user.role === 'BANNED') {
+      if (state.url !== '/banned') {
+        router.navigate(['/banned']);
+        return false;
+      }
+      return true;
+    }
+
+    // Redirect banned page usage for non-banned users
+    if (state.url === '/banned') {
+      router.navigate(['/']);
+      return false;
+    }
+
     // Logged-in users (all roles) should not access login/register
     if (state.url === '/login' || state.url === '/register') {
       // Redirect based on role

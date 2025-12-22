@@ -1,50 +1,45 @@
 <app-main-header></app-main-header>
 
-<div class="profile-page" *ngIf="!loading; else loadingTpl">
-  <div class="card">
-    <div class="card-header">
-      <div class="avatar">
-        <img *ngIf="avatarPreview; else placeholder" [src]="avatarPreview" alt="avatar" />
-        <ng-template #placeholder>
-          <mat-icon fontSet="material-icons-outlined">person</mat-icon>
-        </ng-template>
-        <label class="upload-btn">
-          <input type="file" (change)="onFileSelected($event)" accept="image/*" />
-          Change avatar
-        </label>
-      </div>
-      <div class="info">
-        <h2>{{ profile?.username }}</h2>
-        <p>Joined: {{ profile?.createdAt | date }}</p>
-        <p *ngIf="profile?.role">Role: {{ profile?.role }}</p>
-      </div>
+<div class="profile-container" *ngIf="!loading(); else loadingTpl">
+  <div class="profile-header">
+    <h1>Edit Profile</h1>
+  </div>
+
+  <div class="profile-form">
+    <!-- Messages -->
+    <div *ngIf="error()" class="message error">{{ error() }}</div>
+    <div *ngIf="success()" class="message success">{{ success() }}</div>
+
+    <!-- Avatar -->
+    <div class="avatar-section">
+      <img [src]="avatarUrl() || 'assets/default-avatar.png'" alt="Avatar" class="avatar-preview">
+      <input type="file" (change)="onFileSelected($event)" accept="image/*" class="file-input">
     </div>
 
-    <div class="messages">
-      <div class="success" *ngIf="success">{{ success }}</div>
-      <div class="error" *ngIf="error">{{ error }}</div>
+    <!-- Read-only Fields -->
+    <div class="form-group">
+      <label>Username</label>
+      <div class="read-only-field">{{ profile()?.username }}</div>
+      <small class="field-note">Username cannot be changed</small>
     </div>
 
-    <div class="form-grid">
-      <label>
-        Username
-        <input type="text" [(ngModel)]="username" disabled />
-      </label>
+    <div class="form-group">
+      <label>Age</label>
+      <div class="read-only-field">{{ profile()?.age || 'Not set' }}</div>
+      <small class="field-note">Age cannot be changed</small>
+    </div>
 
-      <label>
-        Email
-        <input type="email" [(ngModel)]="email" />
-      </label>
+    <!-- Editable Fields -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" [ngModel]="email()" (ngModelChange)="email.set($event)" class="form-control"
+        placeholder="Email">
+    </div>
 
-      <label>
-        Age
-        <input type="number" [(ngModel)]="age" min="0" disabled />
-      </label>
-
-      <label>
-        New Password
-        <input type="password" [(ngModel)]="password" placeholder="Leave blank to keep current" />
-      </label>
+    <div class="form-group">
+      <label for="password">New Password (leave blank to keep current)</label>
+      <input type="password" id="password" [ngModel]="password()" (ngModelChange)="password.set($event)"
+        class="form-control" placeholder="New Password">
     </div>
 
     <div class="actions">

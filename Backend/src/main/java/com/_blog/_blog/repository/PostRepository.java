@@ -12,6 +12,14 @@ import com._blog._blog.models.Post;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
+    // Existing methods
     Page<Post> findAllByAuthorUsername(String username, Pageable pageable);
     Optional<Post> findById(Long id);
+    
+    // Visibility filtering
+    Page<Post> findAllByVisibleTrue(Pageable pageable);
+    Page<Post> findAllByAuthorUsernameAndVisibleTrue(String username, Pageable pageable);
+    
+    // Subscribed users' posts
+    Page<Post> findAllByAuthorIdInAndVisibleTrue(List<Long> authorIds, Pageable pageable);
 }
