@@ -48,6 +48,7 @@ export class Admin implements OnInit {
 
   activeTab = signal<'users' | 'reports' | 'posts'>('users');
 
+
   // Computed signals
   pageNumbers = computed(() => {
     const pages: number[] = [];

@@ -124,6 +124,9 @@ export class Post implements OnInit {
       error: (err) => console.error('Error creating comment', err)
     });
   }
+  deletePost() {
+    
+  }
 
   deleteComment(commentId: number) {
     if (!confirm('Are you sure you want to delete this comment?')) return;
