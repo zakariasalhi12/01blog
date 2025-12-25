@@ -14,6 +14,10 @@
 
       <button (click)="subscribe()" *ngIf="!isOwnProfile() && !sub()">Subscribe</button>
       <button (click)="subscribe()" *ngIf="!isOwnProfile() && sub()">Unsubscribe</button>
+
+      <!-- Report / Undo icons -->
+      <mat-icon *ngIf="!isOwnProfile() && !profileReported()" (click)="openReportModal()" title="Report profile" class="report-icon">flag</mat-icon>
+      <mat-icon *ngIf="!isOwnProfile() && profileReported()" (click)="undoReport()" title="Undo report" class="undo-report-icon">undo</mat-icon>
     </div>
 
     <div class="body">
@@ -29,6 +33,35 @@
     </div>
   </div>
 </section>
+
+
+<!-- Report modal -->
+<div class="report-modal" *ngIf="reportModalOpen()">
+  <div class="backdrop" (click)="closeReportModal()"></div>
+  <div class="report-modal-box" (click)="$event.stopPropagation()">
+    <h3>Report {{ profile()?.username }}</h3>
+
+    <div *ngIf="reportStep() === 0" class="report-step edit">
+      <label for="report-reason">Reason</label>
+      <textarea id="report-reason" [(ngModel)]="reportReason" rows="5" placeholder="Explain why you're reporting this user"></textarea>
+      <div class="actions">
+        <button class="btn-cancel" (click)="closeReportModal()">Cancel</button>
+        <button class="btn-submit" (click)="onReportSubmitClick()">Submit</button>
+      </div>
+    </div>
+
+    <div *ngIf="reportStep() === 1" class="report-step confirm">
+      <p>Please confirm you want to report this profile for the following reason:</p>
+      <blockquote>{{ reportReason() }}</blockquote>
+      <div class="actions">
+        <button class="btn-back" (click)="reportStep.set(0)">Back</button>
+        <button class="btn-confirm" [disabled]="reportLoading()" (click)="confirmReport()">
+          {{ reportLoading() ? 'Reporting...' : 'Confirm Report' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <div class="container">

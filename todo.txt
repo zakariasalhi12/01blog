@@ -1,5 +1,4 @@
 Task :
-    (1) - report profiles (popup to confirm)
     (2) - show user posts in /me and hide hidden posts from api
     (3) - add validation in both frontend and backend
     (4) - add rate limiter

@@ -28,6 +28,10 @@ export class ProfileService {
       return this.http.get<any>(`${APIUrl}/profile/subscribe?id=${Id}`, {});
     }
 
+    checkReported(Id: number): Observable<{ reported: boolean, reportId?: number }> {
+      return this.http.get<{ reported: boolean, reportId?: number }>(`${APIUrl}/profile/${Id}/report/check`);
+    }
+
     updateProfile(data: Partial<Profile> & { password?: string }, avatar?: File): Observable<any> {
       const formData = new FormData();
       formData.append('updateData', new Blob([JSON.stringify(data)], { type: 'application/json' }));

@@ -1,14 +1,9 @@
 package com._blog._blog.controller;
 
-import java.security.Security;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com._blog._blog.dto.ReportRequest;
@@ -25,8 +19,6 @@ import com._blog._blog.models.User;
 import com._blog._blog.repository.UserRepository;
 import com._blog._blog.service.SubscribeService;
 import com._blog._blog.service.UserService;
-
-import jakarta.websocket.server.PathParam;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -103,6 +95,11 @@ public class ProfileController {
             @RequestBody ReportRequest request
     ) {
         return reportService.reportUser(reportedId, request.getReason());
+    }
+
+    @GetMapping("/profile/{reportedId}/report/check")
+    public ResponseEntity<?> checkIfReported(@PathVariable Long reportedId) {
+        return reportService.checkUserReported(reportedId);
     }
 
 }

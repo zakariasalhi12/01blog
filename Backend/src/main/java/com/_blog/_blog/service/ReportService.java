@@ -90,7 +90,11 @@ public class ReportService {
         Report report = new Report(currentUser , user.get() , reason);
         reportRepository.save(report);
 
-        return ResponseEntity.ok("user Reported successfully");
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("reportId", report.getId());
+        resp.put("message", "User reported successfully");
+        return ResponseEntity.ok(resp);
     }
 
     public ResponseEntity<?> getUserReports(int page, int size) {
@@ -153,6 +157,24 @@ public class ReportService {
 
         reportRepository.delete(report);
         return ResponseEntity.ok("Report deleted successfully");
+    }
+
+    public ResponseEntity<?> checkUserReported(long reportedId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByUsername(username).orElse(null);
+        if (currentUser == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        Optional<Report> existing = reportRepository.findFirstByUserIdAndReportedId(currentUser.getId(), reportedId);
+        Map<String, Object> resp = new HashMap<>();
+        if (existing.isPresent()) {
+            resp.put("reported", true);
+            resp.put("reportId", existing.get().getId());
+        } else {
+            resp.put("reported", false);
+        }
+        return ResponseEntity.ok(resp);
     }
 
     public ResponseEntity<?> showReports(int page, int size) {

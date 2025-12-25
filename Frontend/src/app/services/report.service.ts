@@ -15,6 +15,10 @@ export class ReportService {
     return this.http.post(`${APIUrl}/posts/${postId}/report`, { reason }, { responseType: 'text' });
   }
 
+  reportUser(userId: number, reason: string): Observable<any> {
+    return this.http.post<any>(`${APIUrl}/profile/${userId}/report`, { reason });
+  }
+
   getUserReports(page: number = 0, size: number = 10): Observable<ReportsResponse> {
     return this.http.get<ReportsResponse>(`${APIUrl}/posts/reports?page=${page}&size=${size}`);
   }
