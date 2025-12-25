@@ -88,6 +88,8 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Rate limiting: using lightweight in-app implementation (no external dependency) -->
+
     </dependencies>
 
     <build>
