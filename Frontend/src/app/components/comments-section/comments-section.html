@@ -1,0 +1,53 @@
+<div class="comments-modal" *ngIf="visible">
+  <div class="backdrop" (click)="close.emit()"></div>
+
+  <div class="modal" (click)="$event.stopPropagation()">
+    <button class="close-btn" title="Close" (click)="close.emit()">×</button>
+
+    <h2 class="title">Comments</h2>
+
+    <div class="create-comment">
+      <label for="comment">
+        <mat-icon>chat_bubble_outline</mat-icon>
+        New Comment
+      </label>
+      <textarea id="comment" [(ngModel)]="commentContent" name="commentContent" rows="3"
+        placeholder="Share your thoughts..."></textarea>
+      <button (click)="submitComment()">
+        Send
+        <mat-icon>send</mat-icon>
+      </button>
+    </div>
+
+    <section class="comments">
+      <div class="comments-container" *ngFor="let comment of comments()">
+        <div class="comment-header">
+          <div>
+            <img [src]="getFullFileUrl(comment.avatar)" alt="avatar">
+            <h3>{{ comment.username }}</h3>
+          </div>
+          <div class="comment-info">
+            <p>{{ timeAgo(comment.createdAt) }}</p>
+            <button class="delete-btn" *ngIf="comment.owner" (click)="deleteComment(comment.commentId || comment.id)"
+              title="Delete comment">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="comment-content">
+          <p>{{ comment.content }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="loadingComments">
+        <p>Loading comments...</p>
+      </div>
+      <div *ngIf="!loadingComments && !allCommentsLoaded">
+        <button (click)="loadComments()">Load more comments</button>
+      </div>
+      <div *ngIf="allCommentsLoaded">
+        <p>No more comments.</p>
+      </div>
+    </section>
+  </div>
+</div>

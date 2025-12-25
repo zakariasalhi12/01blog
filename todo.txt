@@ -1,11 +1,9 @@
 Task :
-    (1) - delete posts (popup to confirm)
-    (2) - report profiles (popup to confirm)
-    (3) - show user posts in /me and hide hidden posts from api
-    (4) - click on notification to make it read instead of make all of them read after get the notifications
-    (5) - add a confirmation popup when click to report
-    (6) - add validation in both frontend and backend
-    (7) - add rate limiter
+    (1) - report profiles (popup to confirm)
+    (2) - show user posts in /me and hide hidden posts from api
+    (3) - add validation in both frontend and backend
+    (4) - add rate limiter
+    (5) - fix logout in ban page
     Final Touch :
         (1) - responsive design Check (or change ui)
         (2) - check status code and json response

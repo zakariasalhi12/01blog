@@ -40,14 +40,28 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public void markNotificationAsSeen(long notificationId) {
+    public ResponseEntity<?> markNotificationAsSeen(long notificationId) {
         String Username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        User currentUser = userRepository.findByUsername(Username).orElseThrow(() -> new NotificationException("Unauthorized", HttpStatus.UNAUTHORIZED));
-        Notifications notification = notificationRepository.findById(notificationId).orElseThrow(() -> new NotificationException("Notification not found", HttpStatus.NOT_FOUND));
+        User currentUser = userRepository.findByUsername(Username).orElse(null);
+        if (currentUser == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        Notifications notification = notificationRepository.findById(notificationId).orElse(null);
+        if (notification == null || !notification.getNotified().getId().equals(currentUser.getId())) {
+            return ResponseEntity.status(404).body("Notification not found");
+        }
 
         notification.setSeen(true);
         notificationRepository.save(notification);
+
+        // Return success json response
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("notificationId", notificationId);
+        resp.put("message", "Notification marked as seen");
+        return ResponseEntity.ok(resp);
     }
 
     public ResponseEntity<?> getNotifications(@RequestParam int page, @RequestParam int size) {
@@ -89,14 +103,6 @@ public class NotificationService {
         response.put("page", page);
         response.put("size", size);
         response.put("total", notificationsPage.getTotalElements());
-
-        notifications.forEach(n -> {
-            if (!n.getSeen()) {
-                n.setSeen(true);
-            }
-        });
-        notificationRepository.saveAll(notifications);
-
         return ResponseEntity.ok(response);
     }
 

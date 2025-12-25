@@ -7,9 +7,12 @@
 </div>
 
 <div class="container">
-  <app-post-card *ngFor="let post of posts" [post]="post" [userReports]="userReports">
+  <app-post-card *ngFor="let post of posts" [post]="post" [userReports]="userReports" (openComments)="openComments($event)">
   </app-post-card>
 </div>
+
+<app-comments-section [postId]="activePostId" [visible]="commentsOpen" (close)="closeComments()">
+</app-comments-section>
 
 
 <div class="loading" *ngIf="loading">

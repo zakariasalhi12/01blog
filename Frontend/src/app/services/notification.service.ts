@@ -18,4 +18,7 @@ export class NotificationsService {
   checkForNotifications(): Observable<boolean> {
       return this.http.get<boolean>(`${APIUrl}/notifications/check`)
   }
+  markAsSeen(notificationId: number): Observable<any> {
+      return this.http.get<any>(`${APIUrl}/notifications/seen?notificationId=${notificationId}`);
+  }
 }

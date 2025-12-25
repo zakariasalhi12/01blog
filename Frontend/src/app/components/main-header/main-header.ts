@@ -57,9 +57,19 @@ export class MainHeader implements OnInit {
 
 
   checkNotification() {
-        this.notificationsService.checkForNotifications().subscribe({
+    this.notificationsService.checkForNotifications().subscribe({
       next: (res) => {
         this.needToSeen.set(res);
+      }
+    })
+  }
+
+  markNotificationAsSeen(n : Notification , notificationId: number) {
+    if (!this.needToSeen()) return;
+    this.notificationsService.markAsSeen(notificationId).subscribe({
+      next: (res) => {
+        n.seen = true;
+        this.checkNotification()
       }
     })
   }

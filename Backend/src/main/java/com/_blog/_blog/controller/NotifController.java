@@ -29,6 +29,11 @@ public class NotifController {
     public ResponseEntity<?> checkForNotification() {
         return notificationService.checkForNotification();
     }
+
+    @GetMapping("/notifications/seen")
+    public ResponseEntity<?> markNotificationAsSeen(@RequestParam long notificationId) {
+        return notificationService.markNotificationAsSeen(notificationId);
+    }
     
     
 }

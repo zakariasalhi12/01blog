@@ -12,7 +12,7 @@
         <span class="date">{{ timeAgo(post.createdAt) }}</span>
     </div>
 
-    <div class="post-content" [routerLink]="['/post', post.id]">
+    <div class="post-content">
         <h1>{{ post.title }}</h1>
         <p>{{ post.content }}</p>
 
@@ -31,7 +31,7 @@
             <mat-icon fontSet="material-icons-outlined">arrow_upward</mat-icon>
             <span>{{ post.likesCount }}</span>
         </div>
-        <div [routerLink]="['/post', post.id]">
+        <div (click)="openComments.emit(post.id); $event.stopPropagation()">
             <mat-icon fontSet="material-icons-outlined">comment</mat-icon>
             <span>{{ post.commentsCount }}</span>
         </div>
@@ -50,6 +50,9 @@
                 </button>
                 <button class="menu-item" (click)="undoReport()" *ngIf="!post.owner && post.reportedByCurrentUser">
                     <mat-icon>flag</mat-icon> Undo Report
+                </button>
+                <button class="menu-item" *ngIf="post.owner" (click)="deletePost()">
+                    <mat-icon>delete</mat-icon> Delete Post
                 </button>
             </div>
         </div>
@@ -76,6 +79,11 @@
         </div>
     </div>
 </div>
+
+<!-- <app-post-card *ngFor="let post of posts" [post]="post" >
+</app-post-card> -->
+
+
 
 <!-- Report Modal -->
 <div class="modal-overlay" *ngIf="showReportModal" (click)="closeReportModal()">

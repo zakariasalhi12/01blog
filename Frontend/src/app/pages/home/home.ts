@@ -2,16 +2,16 @@ import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/cor
 import { PostService } from '../../services/post.service';
 import { ReportService } from '../../services/report.service';
 import { Post } from '../../models/post.model';
-import { BackedURL } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { PostCard } from '../../components/post-card/post-card';
 import { CreatePost } from '../../components/create-post/create-post';
 import { MainHeader } from '../../components/main-header/main-header';
+import { CommentsSection } from '../../components/comments-section/comments-section';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, PostCard, CreatePost, MainHeader],
+  imports: [CommonModule, PostCard, CreatePost, MainHeader , CommentsSection],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
@@ -94,5 +94,26 @@ export class Home implements OnInit {
     if (pos >= max) {
       this.loadPosts();
     }
+  }
+
+  activePostId: number | null = null;
+  commentsOpen = false;
+
+  openComments(postId: number) {
+    // If comments are open for the same post, toggle them closed
+    if (this.commentsOpen && this.activePostId === postId) {
+      this.activePostId = null;
+      this.commentsOpen = false;
+      return;
+    }
+
+    // Otherwise open comments for the requested post (switch if different)
+    this.activePostId = postId;
+    this.commentsOpen = true;
+  }
+
+  closeComments() {
+    this.commentsOpen = false;
+    this.activePostId = null;
   }
 }

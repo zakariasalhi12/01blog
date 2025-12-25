@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Post } from '../../models/post.model';
@@ -140,11 +140,15 @@ export class PostCard implements OnInit {
   }
 
   reportPost(): void {
+
+
     if (!this.reportReason.trim()) {
       alert('Please provide a reason for reporting');
       return;
     }
-
+    // confirmation popup
+    this.closeMenu();
+    if (!confirm('Are you sure you want to report this post ?')) return;
     this.reportService.reportPost(this.post.id, this.reportReason).subscribe({
       next: () => {
         alert('Post reported successfully');
@@ -180,4 +184,23 @@ export class PostCard implements OnInit {
       }
     });
   }
+
+  deletePost(): void {
+    this.closeMenu();
+    if (!confirm('Are you sure you want to delete this post?')) return;
+
+    this.postService.deletePost(this.post.id).subscribe({
+      next: () => {
+        alert('Post deleted successfully');
+        window.location.reload();
+      },
+      error: (err) => {
+        console.error('Error deleting post', err);
+        alert('Failed to delete post');
+      }
+    });
+  }
+
+  @Output() openComments = new EventEmitter<number>();
+
 }

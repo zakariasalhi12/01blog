@@ -28,8 +28,8 @@
 
         <h1 class="title">Notifications</h1>
 
-        <div [routerLink]="['/profile', n.user.userId ]" class="notification" *ngFor="let n of notifications" [class.unseen]="!n.seen">
-            <div class="notification-header">
+        <div (click)="markNotificationAsSeen(n , n.notificationId)" class="notification" *ngFor="let n of notifications" [class.unseen]="!n.seen">
+            <div [routerLink]="['/profile', n.user.userId ]" class="notification-header">
                 <div class="avatar">
                     <img [src]="getFullFileUrl(n.user.avatar)" alt="avatar">
                     <h1>{{ n.user.username }}</h1>
