@@ -64,14 +64,16 @@ export class MainHeader implements OnInit {
     })
   }
 
-  markNotificationAsSeen(n : Notification , notificationId: number) {
-    if (!this.needToSeen()) return;
-    this.notificationsService.markAsSeen(notificationId).subscribe({
-      next: (res) => {
-        n.seen = true;
-        this.checkNotification()
-      }
-    })
+  markNotificationAsSeen(n: Notification, notificationId: number) {
+    if (this.needToSeen()) {
+      this.notificationsService.markAsSeen(notificationId).subscribe({
+        next: (res) => {
+          n.seen = true;
+          this.checkNotification()
+        }
+      })
+    }
+    location.href = `/profile/${n.user.userId}`;
   }
 
   onLogout(): void {
