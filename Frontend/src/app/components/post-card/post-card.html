@@ -90,10 +90,14 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
         <h2>Report Post</h2>
         <textarea [(ngModel)]="reportReason" placeholder="Reason for reporting..." class="modal-textarea"
-            rows="5"></textarea>
+            rows="5" maxlength="1000"></textarea>
+        <div class="report-info">
+            <small class="char-count">{{ (reportReason.length || 0) }} / 1000</small>
+            <div *ngIf="reportReason && reportReason.trim().length > 0 && reportReason.trim().length < 3" class="error">Reason must be at least 3 characters</div>
+        </div>
         <div class="modal-actions">
             <button (click)="closeReportModal()" class="btn-cancel">Cancel</button>
-            <button (click)="reportPost()" class="btn-report">Report</button>
+            <button (click)="reportPost()" class="btn-report" [disabled]="(reportReason.trim().length || 0) < 3 || reportReason.length > 1000">Report</button>
         </div>
     </div>
 </div>

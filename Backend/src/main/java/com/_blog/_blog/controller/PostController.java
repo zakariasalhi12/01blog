@@ -109,7 +109,7 @@ public class PostController {
     @PostMapping("/posts/{postId}/report")
     public ResponseEntity<?> reportProfile(
             @PathVariable Long postId,
-            @RequestBody ReportRequest request
+            @jakarta.validation.Valid @RequestBody ReportRequest request
     ) {
         return reportService.reportPost(postId, request.getReason());
     }

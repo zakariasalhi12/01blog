@@ -3,10 +3,20 @@
 
   <div class="form-group">
     <input formControlName="title" type="text" placeholder="Title" />
+    <div *ngIf="postForm.controls['title'].invalid && postForm.controls['title'].touched" class="error">
+      <div *ngIf="postForm.controls['title'].errors?.['required']">Title is required</div>
+      <div *ngIf="postForm.controls['title'].errors?.['minlength']">Title must be at least 5 characters</div>
+      <div *ngIf="postForm.controls['title'].errors?.['maxlength']">Title is too long</div>
+    </div>
   </div>
 
   <div class="form-group">
     <textarea formControlName="content" placeholder="Content"></textarea>
+    <div *ngIf="postForm.controls['content'].invalid && postForm.controls['content'].touched" class="error">
+      <div *ngIf="postForm.controls['content'].errors?.['required']">Content is required</div>
+      <div *ngIf="postForm.controls['content'].errors?.['minlength']">Content must be at least 10 characters</div>
+      <div *ngIf="postForm.controls['content'].errors?.['maxlength']">Content is too long</div>
+    </div>
   </div>
 
   <div class="form-group">
@@ -21,5 +31,6 @@
     <video *ngIf="isVideo" [src]="previewUrl()" controls></video>
   </div>
 
-  <button type="submit" [disabled]="postForm.invalid">Submit</button>
+  <div *ngIf="serverError" class="error">{{ serverError }}</div>
+  <button type="submit" [disabled]="postForm.invalid || submitting">{{ submitting ? 'Publishing...' : 'Submit' }}</button>
 </form>

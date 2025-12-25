@@ -68,11 +68,11 @@ public class ProfileController {
         return userService.profile(id);
     }
 
-    @PutMapping("/profile")
-    public ResponseEntity<?> updateProfile(
-            @RequestPart(value = "updateData", required = false) User updateData,
+        @PutMapping("/profile")
+        public ResponseEntity<?> updateProfile(
+            @RequestPart(value = "updateData", required = false) @jakarta.validation.Valid com._blog._blog.dto.UserUpdateRequest updateData,
             @RequestPart(value = "avatar", required = false) MultipartFile avatarFile
-    ) {
+        ) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> user = userRepository.findByUsername(username);
@@ -82,17 +82,25 @@ public class ProfileController {
         }
 
         // If updateData is null, just skip updating other fields
+        // If updateData is null, create an empty DTO
         if (updateData == null) {
-            updateData = new User();
+            updateData = new com._blog._blog.dto.UserUpdateRequest();
         }
 
-        return userService.updateUser(user.get().getId(), updateData, avatarFile);
+        // Map DTO -> User entity partially (service will enforce allowed fields)
+        User upd = new User();
+        if (updateData.getUsername() != null) upd.setUsername(updateData.getUsername());
+        if (updateData.getEmail() != null) upd.setEmail(updateData.getEmail());
+        if (updateData.getPassword() != null) upd.setPassword(updateData.getPassword());
+        if (updateData.getAge() != null) upd.setAge(updateData.getAge());
+
+        return userService.updateUser(user.get().getId(), upd, avatarFile);
     }
 
     @PostMapping("/profile/{reportedId}/report")
     public ResponseEntity<?> reportProfile(
             @PathVariable Long reportedId,
-            @RequestBody ReportRequest request
+            @jakarta.validation.Valid @RequestBody ReportRequest request
     ) {
         return reportService.reportUser(reportedId, request.getReason());
     }

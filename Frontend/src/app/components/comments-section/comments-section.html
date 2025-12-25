@@ -13,10 +13,14 @@
       </label>
       <textarea id="comment" [(ngModel)]="commentContent" name="commentContent" rows="3"
         placeholder="Share your thoughts..."></textarea>
-      <button (click)="submitComment()">
-        Send
-        <mat-icon>send</mat-icon>
-      </button>
+      <div class="comment-controls">
+        <small class="char-count">{{ (commentContent.length || 0) }} / {{ maxCommentLength }}</small>
+        <button (click)="submitComment()" [disabled]="(commentContent.trim().length || 0) === 0 || (commentContent.length || 0) > maxCommentLength">
+          Send
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+      <div *ngIf="commentError" class="error">{{ commentError }}</div>
     </div>
 
     <section class="comments">

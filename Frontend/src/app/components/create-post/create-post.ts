@@ -16,11 +16,13 @@ export class CreatePost {
   previewUrl = signal<string | ArrayBuffer | null>(null); 
   isImage = false;
   isVideo = false;
+  submitting = false;
+  serverError: string | null = null;
 
   constructor(private fb: FormBuilder, private postService: PostService , private cdr: ChangeDetectorRef) {
     this.postForm = this.fb.group({
-      title: ['', Validators.required],
-      content: ['', Validators.required]
+      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+      content: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10000)]]
     });
     this.cdr = cdr;
   }
@@ -46,22 +48,29 @@ export class CreatePost {
   onSubmit() {
     if (this.postForm.invalid) return;
 
+    this.submitting = true;
+    this.serverError = null;
+
     const { title, content } = this.postForm.value;
 
     this.postService.createPost(title, content, this.selectedFile ?? undefined)
       .subscribe({
-        next: (res) => {
-          console.log('Post created', res);
-
-          // Reset form & preview
-          this.postForm.reset();
-          this.selectedFile = null;
-          this.previewUrl.set(null);
-          this.isImage = false;
-          this.isVideo = false;
+        next: (res: any) => {
+          // Backend responds with { message, postId }
+          // Reload the page so the feed is refreshed from the server
+          window.location.reload();
         },
-        error: (err) => console.error('Error creating post', err)
+        error: (err) => {
+          console.error('Error creating post', err);
+          const body = err.error;
+          if (body && body.errors) {
+            const first = Object.values(body.errors)[0] as string;
+            this.serverError = first || 'Failed to create post';
+          } else {
+            this.serverError = body?.message || 'Failed to create post';
+          }
+          this.submitting = false;
+        }
       });
-      window.location.reload();
   }
 }

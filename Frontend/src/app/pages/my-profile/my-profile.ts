@@ -30,6 +30,8 @@ export class MyProfile implements OnInit {
   postsTotalPages = signal(0);
   success = signal<string | null>(null);
   error = signal<string | null>(null);
+  emailError = signal<string | null>(null);
+  passwordError = signal<string | null>(null);
 
   // comments UI
   activePostId: number | null = null;
@@ -123,13 +125,27 @@ export class MyProfile implements OnInit {
   save(): void {
     this.error.set(null);
     this.success.set(null);
+    this.emailError.set(null);
+    this.passwordError.set(null);
+
+    // Basic client-side validation
+    const emailVal = this.email().trim();
+    const passwordVal = this.password();
+
+    const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (emailVal && !emailRegex.test(emailVal)) {
+      this.emailError.set('Please enter a valid email address');
+      return;
+    }
+
+    if (passwordVal && passwordVal.trim().length > 0 && passwordVal.length < 6) {
+      this.passwordError.set('Password must be at least 6 characters');
+      return;
+    }
 
     // Only send email and password (if changed)
-    const payload: any = {
-      email: this.email(),
-    };
-    const passwordValue = this.password();
-    if (passwordValue.trim()) payload.password = passwordValue;
+    const payload: any = { email: emailVal };
+    if (passwordVal.trim()) payload.password = passwordVal;
 
     this.profileService.updateProfile(payload, this.avatarFile() ?? undefined).subscribe({
       next: () => {
@@ -139,7 +155,14 @@ export class MyProfile implements OnInit {
         setTimeout(() => this.success.set(null), 3000);
       },
       error: (err) => {
-        this.error.set(err.error?.message || 'Failed to update profile');
+        // If server returns structured validation errors, show them
+        const errBody = err.error;
+        if (errBody && errBody.errors) {
+          const first = Object.values(errBody.errors)[0] as string;
+          this.error.set(first || 'Failed to update profile');
+        } else {
+          this.error.set(err.error?.message || 'Failed to update profile');
+        }
         console.error(err);
       }
     });

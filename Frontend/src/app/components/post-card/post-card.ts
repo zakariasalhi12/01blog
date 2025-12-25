@@ -120,7 +120,7 @@ export class PostCard implements OnInit {
           this.post.fileUrl = this.editPreviewUrl;
         }
         this.closeEditModal();
-        window.location.reload();
+        // No full reload — UI updated in-place above
       },
       error: (err) => {
         console.error('Error updating post', err);
@@ -159,7 +159,13 @@ export class PostCard implements OnInit {
       },
       error: (err) => {
         console.error('Error reporting post', err);
-        alert(err.error?.message || 'Failed to report post');
+        const body = err.error;
+        if (body && body.errors) {
+          const first = Object.values(body.errors)[0] as string;
+          alert(first || 'Failed to report post');
+        } else {
+          alert(body?.message || 'Failed to report post');
+        }
       }
     });
   }

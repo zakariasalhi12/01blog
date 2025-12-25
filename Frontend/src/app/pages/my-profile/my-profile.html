@@ -34,16 +34,18 @@
       <label for="email">Email</label>
       <input type="email" id="email" [ngModel]="email()" (ngModelChange)="email.set($event)" class="form-control"
         placeholder="Email">
+      <div *ngIf="emailError()" class="error">{{ emailError() }}</div>
     </div>
 
     <div class="form-group">
       <label for="password">New Password (leave blank to keep current)</label>
       <input type="password" id="password" [ngModel]="password()" (ngModelChange)="password.set($event)"
         class="form-control" placeholder="New Password">
+      <div *ngIf="passwordError()" class="error">{{ passwordError() }}</div>
     </div>
 
     <div class="actions">
-      <button class="save-btn" (click)="save()">Save Changes</button>
+      <button class="save-btn" (click)="save()" [disabled]="emailError() || passwordError()">Save Changes</button>
     </div>
   </div>
 </div>

@@ -17,6 +17,8 @@ import { AuthService } from '../../services/auth.service';
 })
 export class CommentsSection {
   commentContent = '';
+  maxCommentLength = 1000;
+  commentError: string | null = null;
   currentUser: any = null;
 
   @Input() postId!: number | null;
@@ -83,16 +85,35 @@ export class CommentsSection {
   }
 
   submitComment() {
-    if (!this.commentContent.trim()) return;
+    const trimmed = this.commentContent.trim();
+    const len = trimmed.length;
+    if (len === 0) {
+      this.commentError = 'Comment cannot be empty';
+      return;
+    }
+    if (len > this.maxCommentLength) {
+      this.commentError = `Comment must be at most ${this.maxCommentLength} characters`;
+      return;
+    }
 
+    this.commentError = null;
     this.commentService.createComment({
-      content: this.commentContent,
+      content: trimmed,
       postId: this.postId!
     }).subscribe({
       next: (res) => {
-        location.reload();  
+        location.reload();
       },
-      error: (err) => console.error('Error creating comment', err)
+      error: (err) => {
+        console.error('Error creating comment', err);
+        const body = err.error;
+        if (body && body.errors) {
+          const first = Object.values(body.errors)[0] as string;
+          this.commentError = first || 'Failed to create comment';
+        } else {
+          this.commentError = body?.message || 'Failed to create comment';
+        }
+      }
     });
   }
 

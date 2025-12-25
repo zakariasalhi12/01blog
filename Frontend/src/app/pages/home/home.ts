@@ -37,6 +37,7 @@ export class Home implements OnInit {
     this.loadPosts();
   }
 
+
   switchFeed(type: 'all' | 'subscribed'): void {
     if (this.feedType === type) return;
     this.feedType = type;
