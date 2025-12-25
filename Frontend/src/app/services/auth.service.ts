@@ -24,8 +24,12 @@ export class AuthService {
     return this.http.post(`${APIUrl}/auth/signup`, data);
   }
 
-  logout(): Observable<any> {
-    return this.http.get(`${APIUrl}/logout`);
+  logout(): void{
+    this.http.get(`${APIUrl}/auth/logout`).subscribe({
+      error: (err) => {
+        console.error("Logout error:", err);
+      }
+    })
   }
 
   logged(): Observable<any> {

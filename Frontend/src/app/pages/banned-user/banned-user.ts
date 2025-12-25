@@ -14,7 +14,8 @@ export class BannedUserComponent {
     constructor(private authService: AuthService, private router: Router) { }
 
     logout(): void {
-        this.authService.logout();
+        localStorage.removeItem('token');
+        this.authService.logout()
         this.router.navigate(['/login']);
     }
 }

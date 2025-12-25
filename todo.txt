@@ -3,7 +3,6 @@ Task :
     (2) - show user posts in /me and hide hidden posts from api
     (3) - add validation in both frontend and backend
     (4) - add rate limiter
-    (5) - fix logout in ban page
     Final Touch :
         (1) - responsive design Check (or change ui)
         (2) - check status code and json response

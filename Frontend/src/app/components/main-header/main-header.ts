@@ -1,7 +1,6 @@
 import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
-import { LogoutService } from '../../services/logout.service';
 import { AuthService } from '../../services/auth.service';
 import { BackedURL } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
@@ -20,7 +19,6 @@ import { timeAgo } from '../../lib/timeAgo.helper';
 export class MainHeader implements OnInit {
 
   constructor(
-    private logoutService: LogoutService,
     private router: Router,
     private auth: AuthService,
     private notificationsService: NotificationsService
@@ -78,7 +76,7 @@ export class MainHeader implements OnInit {
 
   onLogout(): void {
     localStorage.removeItem('token');
-    this.logoutService.logout();
+    this.auth.logout();
     this.router.navigate(['/login']);
   }
 
