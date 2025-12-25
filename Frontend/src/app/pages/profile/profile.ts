@@ -5,6 +5,7 @@ import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { PostCard } from '../../components/post-card/post-card';
+import { CommentsSection } from '../../components/comments-section/comments-section';
 import { ProfileService } from '../../services/profile.service';
 import { timeAgo } from '../../lib/timeAgo.helper';
 import { getFullFileUrl } from '../../lib/getFullFileUrl.helper';
@@ -15,7 +16,7 @@ import { ReportService } from '../../services/report.service';
 
 @Component({
   selector: 'app-profile',
-  imports: [MainHeader, RouterLink, CommonModule, MatIcon, PostCard, FormsModule],
+  imports: [MainHeader, CommonModule, MatIcon, PostCard, CommentsSection, FormsModule],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -38,6 +39,10 @@ export class Profile implements OnInit {
   loading = false;
   hasMore = true;
   userReports: Map<number, number> = new Map(); // postId -> reportId
+
+  // comments UI
+  activePostId: number | null = null;
+  commentsOpen = false;
 
   timeAgo = timeAgo;
   getFullFileUrl = getFullFileUrl;
@@ -102,6 +107,22 @@ export class Profile implements OnInit {
       this.loadPosts();
 
     });
+  }
+
+  openComments(postId: number) {
+    if (this.commentsOpen && this.activePostId === postId) {
+      this.activePostId = null;
+      this.commentsOpen = false;
+      return;
+    }
+
+    this.activePostId = postId;
+    this.commentsOpen = true;
+  }
+
+  closeComments() {
+    this.commentsOpen = false;
+    this.activePostId = null;
   }
 
   checksub(): void {

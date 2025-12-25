@@ -116,6 +116,24 @@
     color: #666;
 }
 
+.my-posts {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.my-posts h2 {
+    margin-bottom: 1rem;
+    color: var(--font-color);
+}
+.posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.no-posts { color: #666; font-style: italic; margin-bottom: 1rem; }
+
 .message {
     padding: 1rem;
     border-radius: 6px;

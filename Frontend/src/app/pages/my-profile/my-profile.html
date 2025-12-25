@@ -51,3 +51,15 @@
 <ng-template #loadingTpl>
   <div class="loading">Loading profile...</div>
 </ng-template>
+
+<div class="my-posts" *ngIf="!postsLoading()">
+  <h2>My Posts</h2>
+  <div *ngIf="posts().length === 0" class="no-posts">You haven't posted anything yet.</div>
+  <div class="posts-list">
+    <app-post-card *ngFor="let p of posts()" [post]="p" (openComments)="openComments($event)"></app-post-card>
+  </div>
+</div>
+
+<div *ngIf="postsLoading()" class="loading">Loading your posts...</div>
+
+<app-comments-section [postId]="activePostId" [visible]="commentsOpen" (close)="closeComments()"></app-comments-section>

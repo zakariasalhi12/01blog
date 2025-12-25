@@ -6,11 +6,15 @@ import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../../services/profile.service';
 import { Profile } from '../../models/profile.model';
 import { getFullFileUrl } from '../../lib/getFullFileUrl.helper';
+import { PostService } from '../../services/post.service';
+import { Post } from '../../models/post.model';
+import { PostCard } from '../../components/post-card/post-card';
+import { CommentsSection } from '../../components/comments-section/comments-section';
 
 @Component({
   selector: 'app-my-profile',
   standalone: true,
-  imports: [MainHeader, MatIcon, CommonModule, FormsModule],
+  imports: [MainHeader, CommonModule, FormsModule, PostCard, CommentsSection],
   templateUrl: './my-profile.html',
   styleUrl: './my-profile.css',
 })
@@ -19,8 +23,17 @@ export class MyProfile implements OnInit {
   // Signals for reactive state
   profile = signal<Profile | null>(null);
   loading = signal(false);
+  // posts
+  posts = signal<Post[]>([]);
+  postsLoading = signal(false);
+  postsPage = signal(0);
+  postsTotalPages = signal(0);
   success = signal<string | null>(null);
   error = signal<string | null>(null);
+
+  // comments UI
+  activePostId: number | null = null;
+  commentsOpen = false;
 
   // Only email and password are editable
   email = signal('');
@@ -38,10 +51,27 @@ export class MyProfile implements OnInit {
 
   getFullUrl = getFullFileUrl;
 
-  constructor(private profileService: ProfileService) { }
+  constructor(private profileService: ProfileService, private postService: PostService) { }
 
   ngOnInit(): void {
     this.fetchProfile();
+    this.fetchPosts();
+  }
+
+  openComments(postId: number) {
+    if (this.commentsOpen && this.activePostId === postId) {
+      this.activePostId = null;
+      this.commentsOpen = false;
+      return;
+    }
+
+    this.activePostId = postId;
+    this.commentsOpen = true;
+  }
+
+  closeComments() {
+    this.commentsOpen = false;
+    this.activePostId = null;
   }
 
   fetchProfile(): void {
@@ -57,6 +87,22 @@ export class MyProfile implements OnInit {
         this.error.set('Failed to load profile');
         console.error(err);
         this.loading.set(false);
+      }
+    });
+  }
+
+  fetchPosts(page: number = 0, size: number = 10): void {
+    this.postsLoading.set(true);
+    this.postService.getmyPosts(page, size).subscribe({
+      next: (res) => {
+        this.posts.set(res.posts ?? []);
+        this.postsPage.set(res.currentPage ?? 0);
+        this.postsTotalPages.set(res.totalPages ?? 0);
+        this.postsLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to load my posts', err);
+        this.postsLoading.set(false);
       }
     });
   }

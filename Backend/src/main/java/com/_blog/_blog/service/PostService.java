@@ -214,7 +214,13 @@ public class PostService {
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Post> postsPage = postRepository.findAllByAuthorUsername(username, pageable);
+        // For regular users, do not include hidden posts in their own /posts/me view.
+        Page<Post> postsPage;
+        if (currentUser.getRole().equals(User.Role.ADMIN)) {
+            postsPage = postRepository.findAllByAuthorUsername(username, pageable);
+        } else {
+            postsPage = postRepository.findAllByAuthorUsernameAndVisibleTrue(username, pageable);
+        }
 
         List<Map<String, Object>> postsList = postsPage.getContent().stream().map(post -> {
             Map<String, Object> map = new HashMap<>();
@@ -278,7 +284,8 @@ public class PostService {
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Post> postsPage = postRepository.findAllByAuthorUsername(user.getUsername(), pageable);
+        // Only return posts that are visible (exclude hidden posts) when fetching another user's posts
+        Page<Post> postsPage = postRepository.findAllByAuthorUsernameAndVisibleTrue(user.getUsername(), pageable);
 
         List<Map<String, Object>> postsList = postsPage.getContent().stream().map(post -> {
             Map<String, Object> map = new HashMap<>();
