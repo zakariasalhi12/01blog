@@ -3,6 +3,8 @@ package com._blog._blog.models;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,10 +25,12 @@ public class Notifications {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "notified_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User notified;
 
     @Column(nullable = false)

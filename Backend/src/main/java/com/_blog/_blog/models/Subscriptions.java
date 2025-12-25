@@ -1,5 +1,8 @@
     package com._blog._blog.models;
 
+    import org.hibernate.annotations.OnDelete;
+    import org.hibernate.annotations.OnDeleteAction;
+    
     import jakarta.persistence.Entity;
     import jakarta.persistence.GeneratedValue;
     import jakarta.persistence.GenerationType;
@@ -18,10 +21,12 @@
 
         @ManyToOne
         @JoinColumn(name = "subscriber_id", nullable = false)
+        @OnDelete(action = OnDeleteAction.CASCADE)
         private User subscriber;
 
         @ManyToOne
         @JoinColumn(name = "subscribed_to_id", nullable = false)
+        @OnDelete(action = OnDeleteAction.CASCADE)
         private User subscribedTo;
 
         public Subscriptions() {}

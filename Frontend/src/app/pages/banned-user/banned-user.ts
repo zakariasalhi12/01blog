@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
     selector: 'app-banned-user',
     standalone: true,
-    imports: [CommonModule, RouterLink],
+    imports: [CommonModule],
     templateUrl: './banned-user.html',
     styleUrl: './banned-user.css'
 })

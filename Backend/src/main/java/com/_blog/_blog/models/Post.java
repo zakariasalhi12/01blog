@@ -3,6 +3,8 @@ package com._blog._blog.models;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -24,6 +26,7 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_post_author"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
     private String title;
