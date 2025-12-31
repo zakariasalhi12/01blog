@@ -14,8 +14,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "notifications")
 public class Notifications {
 
@@ -43,9 +47,6 @@ public class Notifications {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public Notifications() {
-    }
-
     public Notifications(User user, User notified, String message) {
         this.user = user;
         this.notified = notified;
@@ -53,47 +54,7 @@ public class Notifications {
         this.seen = false;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public User getNotified() {
-        return notified;
-    }
-
     public boolean getSeen() {
         return seen;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setNotified(User notified) {
-        this.notified = notified;
-    }
-
-    public void setSeen(boolean seen) {
-        this.seen = seen;
     }
 }

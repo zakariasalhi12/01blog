@@ -14,9 +14,13 @@ import jakarta.persistence.ManyToOne;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "reports")
+@Data
+@NoArgsConstructor
 public class Report {
 
     @Id
@@ -44,10 +48,6 @@ public class Report {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-
-    public Report() {}
-
-
     public User getUser() {
         return user;
     }
@@ -66,41 +66,5 @@ public class Report {
         this.user = user;
         this.reported = reported;
         this.reason = reason;
-    }
-    
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
-    }
-
-    public User getReported() {
-        return reported;
-    }
-
-    public void setReported(User reported) {
-        this.reported = reported;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String Reason) {
-        this.reason = Reason;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

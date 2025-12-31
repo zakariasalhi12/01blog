@@ -2,8 +2,10 @@ package com._blog._blog.dto;
 
 import java.time.LocalDateTime;
 
-public class CommentResponse {
+import lombok.Data;
 
+@Data
+public class CommentResponse {
     private Long commentId;
     private String content;
     private LocalDateTime createdAt;
@@ -23,14 +25,4 @@ public class CommentResponse {
         this.avatar =avatar;
         this.owner = owner;
     }
-
-    // Getters
-    public Long getCommentId() { return commentId; }
-    public String getContent() { return content; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public Long getUserId() { return userId; }
-    public String getUsername() { return username; }
-    public long getLikes() { return likes; }
-    public String getAvatar() {return avatar;}
-    public boolean getOwner() {return owner;}
 }
