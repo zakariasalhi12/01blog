@@ -171,7 +171,7 @@ export class Admin implements OnInit {
         }, 3000);
       },
       error: (err) => {
-        this.error.set(err.error?.message || 'Failed to update user role. Please try again.');
+        this.error.set(err.error || 'Failed to update user role. Please try again.');
         console.error('Error updating user role:', err);
       }
     });
@@ -200,6 +200,24 @@ export class Admin implements OnInit {
       () => this.updateRole(user.id, 'USER')
     );
   }
+
+  deleteUser(user: User): void {
+    this.confirmAction(
+      'Delete User',
+      `Are you sure you want to delete ${user.username}?`,
+      () => this.adminService.deleteUser(user.id).subscribe({
+        next: () => {
+          this.success.set('User deleted successfully');
+          this.loadUsers();
+          setTimeout(() => this.success.set(null), 3000);
+        },
+        error: (err) => {
+          this.error.set(err.error || 'Failed to delete user. Please try again.');
+        }
+      })
+    );
+  }
+
 
   getRoleBadgeClass(role: string): string {
     switch (role) {
@@ -264,7 +282,7 @@ export class Admin implements OnInit {
             }, 3000);
           },
           error: (err) => {
-            this.error.set(err.error?.message || 'Failed to delete report. Please try again.');
+            this.error.set(err.error || 'Failed to delete report. Please try again.');
             console.error('Error deleting report:', err);
           }
         });
@@ -352,7 +370,7 @@ export class Admin implements OnInit {
             }, 3000);
           },
           error: (err) => {
-            this.error.set(err.error?.message || 'Failed to delete post. Please try again.');
+            this.error.set(err.error || 'Failed to delete post. Please try again.');
             console.error('Error deleting post:', err);
           }
         });
@@ -375,7 +393,7 @@ export class Admin implements OnInit {
             }, 3000);
           },
           error: (err) => {
-            this.error.set(err.error?.message || 'Failed to update post visibility. Please try again.');
+            this.error.set(err.error || 'Failed to update post visibility. Please try again.');
             console.error('Error updating post visibility:', err);
           }
         });

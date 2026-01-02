@@ -20,6 +20,10 @@ export class AdminService {
     return this.http.put(`${APIUrl}/admin/users/${userId}/role`, { role });
   }
 
+  deleteUser(userId: number): Observable<any> {
+    return this.http.delete(`${APIUrl}/admin/users/${userId}`);
+  }
+
   getAllReports(page: number = 0, size: number = 10): Observable<ReportsResponse> {
     return this.http.get<ReportsResponse>(`${APIUrl}/admin/reports?page=${page}&size=${size}`);
   }

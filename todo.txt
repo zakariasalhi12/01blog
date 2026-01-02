@@ -1,9 +1,9 @@
 Task :
-    (1) - add deleting user in dashboard admin
     (3) - add 404 page 
     (1) - add validation in both frontend and backend
     (4) - stop showing report to regular users
-    (5) - delete the picture if it changed    
+    (5) - delete the picture if it changed
+    
     Final Touch :
         (1) - responsive design Check (or change ui)
         (2) - check status code and json response

@@ -217,4 +217,33 @@ public class UserService {
             return ResponseEntity.status(400).body("Invalid role: " + role);
         }
     }
+
+    public ResponseEntity<?> deleteUserByAdmin(Long userId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> loggedUserOpt = userRepository.findByUsername(username);
+
+        if (loggedUserOpt.isEmpty()) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
+        User loggedUser = loggedUserOpt.get();
+        if (!loggedUser.getRole().equals(User.Role.ADMIN)) {
+            return ResponseEntity.status(403).body("Forbidden: Admin access required");
+        }
+
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+
+        User user = userOpt.get();
+
+        // Prevent admin from deleting their own account
+        if (user.getId().equals(loggedUser.getId())) {
+            return ResponseEntity.status(400).body("Cannot delete your own account");
+        }
+
+        userRepository.delete(user);
+        return ResponseEntity.ok("User deleted successfully");
+    }
 }

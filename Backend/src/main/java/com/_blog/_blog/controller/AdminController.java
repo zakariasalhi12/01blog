@@ -16,6 +16,8 @@ import com._blog._blog.service.PostService;
 
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/admin")
@@ -39,10 +41,15 @@ public class AdminController {
 
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers(
-        @org.springframework.web.bind.annotation.RequestParam(defaultValue = "0") int page,
-        @org.springframework.web.bind.annotation.RequestParam(defaultValue = "10") int size
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
     ) {
         return userService.getAllUsers(page, size);
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
+        return userService.deleteUserByAdmin(userId);
     }
 
     @PutMapping("/users/{userId}/role")
@@ -59,8 +66,8 @@ public class AdminController {
 
     @GetMapping("/reports")
     public ResponseEntity<?> getAllReports(
-        @org.springframework.web.bind.annotation.RequestParam(defaultValue = "0") int page,
-        @org.springframework.web.bind.annotation.RequestParam(defaultValue = "10") int size
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
     ) {
         return reportService.showReports(page, size);
     }
@@ -68,8 +75,8 @@ public class AdminController {
     // Posts management
     @GetMapping("/posts")
     public ResponseEntity<?> getAllPosts(
-        @org.springframework.web.bind.annotation.RequestParam(defaultValue = "0") int page,
-        @org.springframework.web.bind.annotation.RequestParam(defaultValue = "10") int size
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
     ) {
         return postService.getAllPostsForAdmin(page, size);
     }

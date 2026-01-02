@@ -22,16 +22,16 @@ import com._blog._blog.repository.CommentRepository;
 import com._blog._blog.repository.PostRepository;
 import com._blog._blog.repository.UserRepository;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class CommentService {
 
-    @Autowired
     private CommentRepository commentRepository;
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private PostRepository postRepository;
 
     // Create a comment
