@@ -1,4 +1,8 @@
- 01blog
+ # 01blog
+ is a fullstack social blogging platform designed for students to document and share their learning experiences, discoveries, and progress. The platform fosters a collaborative environment where users can interact with content, follow peers, and engage in meaningful educational discussions.
+ Built with modern technologies, 01Blog combines a robust Java Spring Boot backend with a dynamic Angular frontend to deliver a seamless user experience.
+
+ 
 
 ### Technologies
 - Backend :
@@ -31,3 +35,26 @@
     - Admin can manage posts and remove inappropriate content.
     - Admin can handle user reports (ban/delete user or post).
     - All admin routes must be protected by access control.
+
+# Installation
+### 1 - Clone the repository
+```bash
+    git clone https://github.com/zakariasalhi12/01blog.git
+    cd 01blog
+```
+### 2 - Backend Setup
+```bash
+    cd Backend
+    ./mvnw spring-boot:run
+```
+### 3 - Frontend Setup
+```bash
+    cd Frontend
+    npm install
+    ng serve
+```
+
+### Docker compose Setup
+```bash
+    docker compose up -d
+```

@@ -5,7 +5,7 @@ export function timeAgo(date: string | Date): string {
       ? new Date(date.endsWith('Z') ? date : date + 'Z')
       : date;
 
-  const seconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+  const seconds = Math.floor((now?.getTime() - past?.getTime()) / 1000);
 
   if (seconds < 5) return 'just now';
 

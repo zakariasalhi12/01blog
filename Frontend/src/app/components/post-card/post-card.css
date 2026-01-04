@@ -1,5 +1,5 @@
 .post {
-    width: 600px;
+    max-width: 600px;
     min-height: fit-content;
     max-height: fit-content;
     border-radius: 30px;
