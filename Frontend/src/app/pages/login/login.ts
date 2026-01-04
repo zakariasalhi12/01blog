@@ -16,7 +16,10 @@ export class Login {
 
   login = '';
   password = '';
+  // General error
   error = signal('');
+  // Field-level errors (if backend returns a map of field->message)
+  errors = signal<Record<string, string>>({});
 
   constructor(private auth: AuthService) {}
 
@@ -31,8 +34,28 @@ export class Login {
         window.location.href = '/';
       },
       error: (err) => {
-        this.error.set(err.error.error || 'Login failed');
+        // Prefer structured field errors, then general 'error' key, then fallback
+        if (err && err.error && err.error.errors) {
+          this.errors.set(err.error.errors);
+          this.error.set('');
+        } else if (err && err.error) {
+          const general = err.error.error || err.error.message || JSON.stringify(err.error);
+          this.error.set(general);
+          this.errors.set({});
+        } else {
+          this.error.set('Login failed');
+          this.errors.set({});
+        }
       }
     });
+  }
+
+  clearField(field: string) {
+    const current = { ...this.errors() };
+    if (current[field]) {
+      delete current[field];
+      this.errors.set(current);
+    }
+    if (this.error()) { this.error.set(''); }
   }
 }

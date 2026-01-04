@@ -17,11 +17,11 @@ export class AdminService {
   }
 
   updateUserRole(userId: number, role: 'USER' | 'ADMIN' | 'BANNED'): Observable<any> {
-    return this.http.put(`${APIUrl}/admin/users/${userId}/role`, { role });
+    return this.http.put(`${APIUrl}/admin/users/${userId}/role`, { role }, { responseType: 'text' });
   }
 
   deleteUser(userId: number): Observable<any> {
-    return this.http.delete(`${APIUrl}/admin/users/${userId}`);
+    return this.http.delete(`${APIUrl}/admin/users/${userId}`, { responseType: 'text' });
   }
 
   getAllReports(page: number = 0, size: number = 10): Observable<ReportsResponse> {
@@ -29,20 +29,20 @@ export class AdminService {
   }
 
   deleteReport(reportId: number): Observable<any> {
-    return this.http.delete(`${APIUrl}/admin/report/${reportId}`);
+    return this.http.delete(`${APIUrl}/admin/report/${reportId}`, { responseType: 'text' });
   }
 
   // Posts management
   getAllPosts(page: number = 0, size: number = 10): Observable<any> {
-    return this.http.get(`${APIUrl}/admin/posts?page=${page}&size=${size}`);
+    return this.http.get(`${APIUrl}/admin/posts?page=${page}&size=${size}` );
   }
 
   deletePost(postId: number): Observable<any> {
-    return this.http.post(`${APIUrl}/admin/posts/${postId}/delete`, {});
+    return this.http.post(`${APIUrl}/admin/posts/${postId}/delete`, {}, { responseType: 'text' });
   }
 
   togglePostVisibility(postId: number, visible: boolean): Observable<any> {
-    return this.http.put(`${APIUrl}/admin/posts/${postId}/visibility`, { visible });
+    return this.http.put(`${APIUrl}/admin/posts/${postId}/visibility`, { visible }, { responseType: 'text' });
   }
 }
 

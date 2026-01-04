@@ -13,14 +13,17 @@
         <div class="login">
             <h1>Register</h1>
 
-            <!-- Error message -->
-            <p *ngIf="error" class="error">{{ error() }}</p>
+            <!-- General error message -->
+            <p *ngIf="error()" class="error">{{ error() }}</p>
 
-            <input placeholder="Email" [(ngModel)]="email" required>
+            <input placeholder="Email" [(ngModel)]="email" (ngModelChange)="clearField('email')" required>
+            <p *ngIf="errors()['email']" class="field-error">{{ errors()['email'] }}</p>
 
-            <input placeholder="Username" [(ngModel)]="username" required>
+            <input placeholder="Username" [(ngModel)]="username" (ngModelChange)="clearField('username')" required>
+            <p *ngIf="errors()['username']" class="field-error">{{ errors()['username'] }}</p>
 
-            <input type="password" [(ngModel)]="password" required placeholder="password">
+            <input type="password" [(ngModel)]="password" (ngModelChange)="clearField('password')" required placeholder="password">
+            <p *ngIf="errors()['password']" class="field-error">{{ errors()['password'] }}</p>
 
             <input [(ngModel)]="age" type="number" placeholder="age" min="15" max="70" value="15">
 

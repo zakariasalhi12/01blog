@@ -32,12 +32,14 @@ export class ProfileService {
       return this.http.get<{ reported: boolean, reportId?: number }>(`${APIUrl}/profile/${Id}/report/check`);
     }
 
-    updateProfile(data: Partial<Profile> & { password?: string }, avatar?: File): Observable<any> {
+    updateProfile(data: Partial<Profile> & { password?: string }, avatar?: File): Observable<string> {
       const formData = new FormData();
       formData.append('updateData', new Blob([JSON.stringify(data)], { type: 'application/json' }));
       if (avatar) {
         formData.append('avatar', avatar, avatar.name);
       }
-      return this.http.put(`${APIUrl}/profile`, formData);
+      // Backend returns plain text on success (e.g. "User updated successfully").
+      // Request responseType 'text' so Angular does not try to parse JSON.
+      return this.http.put(`${APIUrl}/profile`, formData, { responseType: 'text' });
     }
 }

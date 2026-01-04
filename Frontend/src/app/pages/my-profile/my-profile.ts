@@ -87,7 +87,6 @@ export class MyProfile implements OnInit {
       },
       error: (err) => {
         this.error.set('Failed to load profile');
-        console.error(err);
         this.loading.set(false);
       }
     });
@@ -143,14 +142,30 @@ export class MyProfile implements OnInit {
       return;
     }
 
-    // Only send email and password (if changed)
-    const payload: any = { email: emailVal };
-    if (passwordVal.trim()) payload.password = passwordVal;
+    // Determine what actually changed
+    const originalEmail = this.profile()?.email ?? '';
+    const emailChanged = emailVal !== originalEmail;
+    const passwordChanged = passwordVal.trim().length > 0;
+    const avatarChanged = !!this.avatarFile();
+
+    if (!emailChanged && !passwordChanged && !avatarChanged) {
+      this.error.set('Nothing to change');
+      return;
+    }
+
+    // Only include changed fields
+    const payload: any = {};
+    if (emailChanged) payload.email = emailVal;
+    if (passwordChanged) payload.password = passwordVal;
 
     this.profileService.updateProfile(payload, this.avatarFile() ?? undefined).subscribe({
-      next: () => {
-        this.success.set('Profile updated');
+      next: (res) => {
+        // Backend returns plain text like "User updated successfully"
+        const msg = typeof res === 'string' ? res : 'Profile updated';
+        this.success.set(msg);
         this.password.set('');
+        // Clear avatarFile since upload may have been used
+        this.avatarFile.set(null);
         this.fetchProfile();
         setTimeout(() => this.success.set(null), 3000);
       },
@@ -160,10 +175,12 @@ export class MyProfile implements OnInit {
         if (errBody && errBody.errors) {
           const first = Object.values(errBody.errors)[0] as string;
           this.error.set(first || 'Failed to update profile');
+        } else if (typeof errBody === 'string') {
+          // Server might return plain text error
+          this.error.set(errBody);
         } else {
-          this.error.set(err.error?.message || 'Failed to update profile');
+          this.error.set(err?.error || 'Failed to update profile');
         }
-        console.error(err);
       }
     });
   }

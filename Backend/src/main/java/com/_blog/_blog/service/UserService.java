@@ -127,9 +127,19 @@ public class UserService {
 
         // 5️⃣ Update only allowed fields (email, password, avatar)
         if (updateData.getEmail() != null) {
+            if (!updateData.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                return ResponseEntity.status(400).body("Invalid email format");
+            }
+            if (userRepository.existsByEmail(updateData.getEmail()) &&
+                !user.getEmail().equals(updateData.getEmail())) {
+                return ResponseEntity.status(400).body("Email is already in use");
+            }
             user.setEmail(updateData.getEmail());
         }
         if (updateData.getPassword() != null) {
+            if (updateData.getPassword().length() < 6) {
+                return ResponseEntity.status(400).body("Password must be at least 6 characters long");
+            }
             user.setPassword(updateData.getPassword());
         }
 

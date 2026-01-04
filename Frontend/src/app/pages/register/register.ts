@@ -17,7 +17,10 @@ export class Register {
   email = '';
   password = '';
   age = 15;
+  // General error message
   error = signal('');
+  // Field-specific errors returned by the backend, e.g. { password: '...', email: '...'}
+  errors = signal<Record<string, string>>({});
 
   constructor(private auth: AuthService) {}
 
@@ -40,8 +43,33 @@ export class Register {
         window.location.href = '/';
       },
       error: (err) => {
-        this.error.set(JSON.stringify(err.error));
+        // If backend sends { errors: { field: message } }
+        if (err && err.error && err.error.errors) {
+          this.errors.set(err.error.errors);
+          // clear general error
+          this.error.set('');
+        } else if (err && err.error) {
+          // fallback: show message or entire error object
+          const msg = err.error.message || err.error.error || JSON.stringify(err.error);
+          this.error.set(msg);
+          this.errors.set({});
+        } else {
+          this.error.set('Registration failed');
+          this.errors.set({});
+        }
       }
     });
+  }
+
+  clearField(field: string) {
+    const current = { ...this.errors() };
+    if (current[field]) {
+      delete current[field];
+      this.errors.set(current);
+    }
+    // also clear general error when user edits
+    if (this.error()) {
+      this.error.set('');
+    }
   }
 }

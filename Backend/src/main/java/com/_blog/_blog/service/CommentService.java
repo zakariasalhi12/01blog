@@ -24,24 +24,30 @@ import com._blog._blog.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
-@AllArgsConstructor
-@NoArgsConstructor
 public class CommentService {
 
+    @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
     private PostRepository postRepository;
 
     // Create a comment
     public ResponseEntity<?> createComment(CommentRequest commentRequest) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> optionalUser = userRepository.findByUsername(username);
-        if (!optionalUser.isPresent()) {
+
+        Optional<User> optionalAuthor = userRepository.findByUsername(username);
+        if (!optionalAuthor.isPresent()) {
             return ResponseEntity.status(404).body("User not found");
         }
-        User user = optionalUser.get();
+        User user = optionalAuthor.get();
 
         Optional<Post> optionalPost = postRepository.findById(commentRequest.getPostId());
         if (!optionalPost.isPresent()) {
@@ -50,14 +56,17 @@ public class CommentService {
         Post post = optionalPost.get();
 
         Comment comment = new Comment(user, post, commentRequest.getContent());
-        commentRepository.save(comment);
+        try {
+            commentRepository.save(comment);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to save comment");
+        }
 
         return ResponseEntity.ok("Comment created");
     }
 
     // Get paginated comments for a post, newest first
     public ResponseEntity<?> getCommentsByPost(Long postId, int page, int size) {
-
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if (!optionalUser.isPresent()) {

@@ -94,3 +94,21 @@ main {
     transform: scale(1.02);
     transition: all 0.3s linear;
 }
+
+/* Error styles */
+.error {
+    color: #fff;
+    background: #e74c3c;
+    padding: 8px 12px;
+    border-radius: 6px;
+    width: 90%;
+    text-align: center;
+}
+
+.field-error {
+    color: #e74c3c;
+    font-size: 13px;
+    width: 90%;
+    text-align: left;
+    margin: -6px 0 8px 0;
+}

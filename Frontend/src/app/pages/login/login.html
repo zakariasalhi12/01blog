@@ -16,12 +16,14 @@
             <h1>Login</h1>
 
             <!-- Error message -->
-            <p *ngIf="error" class="error">{{ error() }}</p>
+            <p *ngIf="error()" class="error">{{ error() }}</p>
 
             <!-- Inputs with ngModel -->
-            <input type="text" placeholder="Email or username" [(ngModel)]="login" required>
+            <input type="text" placeholder="Email or username" [(ngModel)]="login" (ngModelChange)="clearField('login')" required>
+            <p *ngIf="errors()['login']" class="field-error">{{ errors()['login'] }}</p>
 
-            <input type="password" placeholder="Password" [(ngModel)]="password" required>
+            <input type="password" placeholder="Password" [(ngModel)]="password" (ngModelChange)="clearField('password')" required>
+            <p *ngIf="errors()['password']" class="field-error">{{ errors()['password'] }}</p>
 
             <button (click)="onSubmit()">Login</button>
 
