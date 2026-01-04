@@ -50,6 +50,7 @@ public class PostService {
     NotificationService notificationService;
 
     // ---------------- Create Post ----------------
+    @SuppressWarnings("null")
     public ResponseEntity<?> createPost(String title, String content, MultipartFile file) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -67,6 +68,7 @@ public class PostService {
                 return fileResponse;
             }
 
+            @SuppressWarnings("unchecked")
             Map<String, String> body = (Map<String, String>) fileResponse.getBody();
             filePath = body.get("fileName");
         }
@@ -337,6 +339,7 @@ public class PostService {
     }
 
     // ---------------- Update Post ----------------
+    @SuppressWarnings("null")
     public ResponseEntity<?> updatePost(Long id, String title, String content, MultipartFile file) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -360,6 +363,7 @@ public class PostService {
             if (!fileResponse.getStatusCode().is2xxSuccessful()) {
                 return fileResponse;
             }
+            @SuppressWarnings("unchecked")
             Map<String, String> body = (Map<String, String>) fileResponse.getBody();
             post.setVideoOrImageUrl(body.get("fileName"));
         }

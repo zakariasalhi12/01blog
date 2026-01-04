@@ -22,11 +22,6 @@ import com._blog._blog.repository.CommentRepository;
 import com._blog._blog.repository.PostRepository;
 import com._blog._blog.repository.UserRepository;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @Service
 public class CommentService {
 

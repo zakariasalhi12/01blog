@@ -1,12 +1,9 @@
 package com._blog._blog.filters;
 
 import java.io.IOException;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,7 +22,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final JwtBlacklist jwtBlacklist;
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
     private final com._blog._blog.service.CustomUserDetailsService userDetailsService;
 
     public JwtAuthFilter(JwtUtil jwtUtil, JwtBlacklist jwtBlacklist, com._blog._blog.service.CustomUserDetailsService userDetailsService) {
@@ -34,18 +30,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
     }
 
+    @SuppressWarnings("null")
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
-        logger.info("JwtAuthFilter: incoming request {} {} - Authorization header present: {}", request.getMethod(), request.getRequestURI(), authHeader != null);
-        System.out.println("[DEBUG] JwtAuthFilter: incoming request " + request.getMethod() + " " + request.getRequestURI() + " - Authorization present: " + (authHeader != null));
-
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-
-            logger.info("JwtAuthFilter: token length {} (masked) for request {} {}", token.length(), request.getMethod(), request.getRequestURI());
-            System.out.println("[DEBUG] JwtAuthFilter: token length=" + token.length() + " for " + request.getMethod() + " " + request.getRequestURI());
 
             if (jwtBlacklist.isBlacklisted(token)) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token revoked");
@@ -74,7 +65,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 // Token expired → return 401
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
                 return;
-            } catch (Exception e) {
+            } catch (UsernameNotFoundException e) {
                 // Invalid token → return 401
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
                 return;

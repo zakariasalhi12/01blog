@@ -109,7 +109,7 @@ public class NotificationService {
     public void deleteNotification(long notificationId) {
         String Username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        User currentUser = userRepository.findByUsername(Username).orElseThrow(() -> new NotificationException("Unauthorized", HttpStatus.UNAUTHORIZED));
+        userRepository.findByUsername(Username).orElseThrow(() -> new NotificationException("Unauthorized", HttpStatus.UNAUTHORIZED));
         Notifications notification = notificationRepository.findById(notificationId).orElseThrow(() -> new NotificationException("Notification not found", HttpStatus.NOT_FOUND));
 
         notificationRepository.delete(notification);

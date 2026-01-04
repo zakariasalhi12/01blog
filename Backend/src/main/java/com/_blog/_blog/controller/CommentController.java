@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com._blog._blog.dto.CommentRequest;
-import com._blog._blog.dto.LoginRequest;
 import com._blog._blog.service.CommentService;
 import com._blog._blog.service.LikeService;
 

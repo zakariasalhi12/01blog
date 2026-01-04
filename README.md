@@ -2,8 +2,6 @@
  is a fullstack social blogging platform designed for students to document and share their learning experiences, discoveries, and progress. The platform fosters a collaborative environment where users can interact with content, follow peers, and engage in meaningful educational discussions.
  Built with modern technologies, 01Blog combines a robust Java Spring Boot backend with a dynamic Angular frontend to deliver a seamless user experience.
 
- 
-
 ### Technologies
 - Backend :
     - Java Spring Boot

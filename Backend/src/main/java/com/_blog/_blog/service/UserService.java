@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com._blog._blog.dto.FullProfileResponse;
 import com._blog._blog.dto.ProfileResponse;
 import com._blog._blog.dto.UserListResponse;
@@ -92,6 +89,7 @@ public class UserService {
         return ResponseEntity.status(404).body("User not found");
     }
 
+    @SuppressWarnings("null")
     public ResponseEntity<?> updateUser(Long id, User updateData, MultipartFile avatarFile) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();

@@ -11,13 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
 import com._blog._blog.dto.UserRequest;
 import com._blog._blog.models.User;
 import com._blog._blog.repository.UserRepository;
 import com._blog._blog.utils.JwtUtil;
-
-import jakarta.validation.Valid;
 
 @Service
 public class RegisterService {
