@@ -80,11 +80,16 @@ export class Profile implements OnInit {
         }
       });
 
-      // load profile
       this.profileService.profile(this.profileId).subscribe({
         next: (res) => this.profile.set(res),
-        // error: (err) => console.error('Failed to fetch post', err)
-      })
+        error: (err) => {
+          if (err.status === 404) {
+            this.router.navigate(['/not-found']);
+          } else {
+            console.error('Failed to load profile', err);
+          }
+        }
+      });
 
       // check if current user already reported this profile
       this.profileService.checkReported(this.profileId).subscribe({
