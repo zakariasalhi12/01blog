@@ -31,6 +31,6 @@
     <video *ngIf="isVideo" [src]="previewUrl()" controls></video>
   </div>
 
-  <div *ngIf="serverError" class="error">{{ serverError }}</div>
+  <div *ngIf="serverError" class="error">{{ serverError() }}</div>
   <button type="submit" [disabled]="postForm.invalid || submitting">{{ submitting ? 'Publishing...' : 'Submit' }}</button>
 </form>

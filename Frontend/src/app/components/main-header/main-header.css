@@ -12,6 +12,7 @@ header {
     top: 0;
     right: 0;
     left: 0;
+    z-index: 1000;
 }
 
 .helper-container {
@@ -66,14 +67,11 @@ header img:hover {
 
 .notification-container {
     position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #38212163;
+    inset: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    z-index: 1000;
 }
 
 /* Container */
@@ -92,7 +90,8 @@ header img:hover {
     background-color: #f7f7f7;
     border-radius: 20px;
 
-    overflow-y: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 

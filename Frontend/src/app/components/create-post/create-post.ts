@@ -17,7 +17,7 @@ export class CreatePost {
   isImage = false;
   isVideo = false;
   submitting = false;
-  serverError: string | null = null;
+  serverError = signal<string | null>(null);
 
   constructor(private fb: FormBuilder, private postService: PostService , private cdr: ChangeDetectorRef) {
     this.postForm = this.fb.group({
@@ -49,7 +49,7 @@ export class CreatePost {
     if (this.postForm.invalid) return;
 
     this.submitting = true;
-    this.serverError = null;
+    this.serverError = signal(null);
 
     const { title, content } = this.postForm.value;
 
@@ -65,9 +65,9 @@ export class CreatePost {
           const body = err.error;
           if (body && body.errors) {
             const first = Object.values(body.errors)[0] as string;
-            this.serverError = first || 'Failed to create post';
+            this.serverError.set(first || 'Failed to create post');
           } else {
-            this.serverError = body?.message || 'Failed to create post';
+            this.serverError.set(body?.error || 'Failed to create post');
           }
           this.submitting = false;
         }
